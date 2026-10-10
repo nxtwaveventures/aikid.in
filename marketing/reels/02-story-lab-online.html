@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Reel 2 — Story Lab Online</title>
+<link rel="stylesheet" href="reels.css" />
+<style>
+  body { background: var(--night); }
+  .night { background: var(--night); color: var(--paper); }
+  .s4 { background: var(--paper); }
+  .path { position: relative; display: flex; flex-direction: column; gap: 40px; margin-top: 70px; width: 100%; }
+  .path::before { content: ""; position: absolute; left: 58px; top: 40px; bottom: 40px; border-left: 6px dashed rgba(255,252,246,.25); }
+  .step { display: flex; align-items: center; gap: 40px; text-align: left; }
+  .num { flex-shrink: 0; width: 116px; height: 116px; border-radius: 50%; background: var(--saffron); color: var(--ink); display: grid; place-items: center; font-family: "Fraunces", serif; font-weight: 700; font-size: 60px; position: relative; z-index: 1; }
+  .step b { display: block; font-family: "Fraunces", serif; font-size: 58px; }
+  .step span { font-size: 34px; opacity: .7; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- twinkling stars across all night scenes -->
+<span class="star twinkle" style="left:120px;top:300px">★</span>
+<span class="star twinkle" style="right:160px;top:380px;animation-delay:-.6s">★</span>
+<span class="star twinkle" style="left:230px;top:1480px;animation-delay:-1.1s">★</span>
+<span class="star twinkle" style="right:110px;top:1350px;animation-delay:-.3s">★</span>
+
+<!-- 1. Hook -->
+<section class="scene night" style="--start:0;--end:3.8">
+  <p class="display rise" style="--at:.2;font-size:110px;line-height:1.08">Screens tell<br />stories.</p>
+  <p class="sign-font pop" style="--at:1.5;font-size:128px;line-height:1.02;margin-top:70px;color:var(--saffron)">Humans tell<br />better ones.</p>
+</section>
+
+<!-- 2. The 5 sessions -->
+<section class="scene night" style="--start:3.8;--end:8.9;justify-content:flex-start;padding-top:300px">
+  <p class="chip rise" style="--at:3.9;background:var(--saffron);color:var(--ink)">Story Lab Online</p>
+  <p class="display rise" style="--at:4.1;font-size:76px;margin-top:34px">5 live sessions</p>
+  <div class="path">
+    <div class="step rise" style="--at:4.6"><div class="num">1</div><div><b>The Spark</b><span>Collecting story ideas</span></div></div>
+    <div class="step rise" style="--at:5.3"><div class="num">2</div><div><b>Heroes &amp; Helpers</b><span>Inventing a character</span></div></div>
+    <div class="step rise" style="--at:6.0"><div class="num">3</div><div><b>Trouble Ahead</b><span>Building the twist</span></div></div>
+    <div class="step rise" style="--at:6.7"><div class="num">4</div><div><b>Say It Out Loud</b><span>Voices &amp; expressions</span></div></div>
+    <div class="step rise" style="--at:7.4"><div class="num">5</div><div><b>Story Day</b><span>Your child performs!</span></div></div>
+  </div>
+</section>
+
+<!-- 3. Outcome -->
+<section class="scene night" style="--start:8.9;--end:11.9">
+  <div class="pop" style="--at:9;font-size:220px">🎤</div>
+  <p class="display rise" style="--at:9.4;font-size:92px;line-height:1.1;margin-top:40px">By session 5,<br />your child tells<br /><span style="color:var(--saffron)">their own story.</span></p>
+</section>
+
+<!-- 4. Offer + CTA -->
+<section class="scene s4" style="--start:11.9;--end:15">
+  <p class="chip rise" style="--at:12;background:rgba(232,102,79,.12);color:var(--coral)">● Limited seats per batch</p>
+  <p class="display pop" style="--at:12.2;font-size:220px;line-height:1;margin-top:40px">₹999</p>
+  <p class="rise" style="--at:12.6;font-weight:800;font-size:46px;margin-top:20px;line-height:1.4">5 live sessions · groups of 6<br />Ages 0–10 · Hindi &amp; English</p>
+  <div class="pop" style="--at:13.1;margin-top:70px;z-index:2"><a class="btn pulse" style="background:var(--saffron);color:var(--ink)">💻 Book a seat · link in bio</a></div>
+  <p class="rise" style="--at:13.5;margin-top:40px;font-weight:800;font-size:40px;opacity:.7">aikid.in</p>
+</section>
+
+</body>
+</html>

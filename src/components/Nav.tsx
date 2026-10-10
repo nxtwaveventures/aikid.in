@@ -24,6 +24,16 @@ function Star({ className = "" }: { className?: string }) {
   );
 }
 
+function InstagramIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden className={className} fill="none" stroke="currentColor" strokeWidth="2">
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 export default function Nav() {
   const [active, setActive] = useState("");
   const [open, setOpen] = useState(false);
@@ -88,6 +98,17 @@ export default function Nav() {
         </div>
 
         <div className="flex items-center gap-2">
+          {site.instagram && (
+            <a
+              href={`https://www.instagram.com/${site.instagram}/`}
+              target="_blank"
+              rel="noopener"
+              aria-label={`Story Lab on Instagram (@${site.instagram})`}
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-tr from-saffron via-coral to-[#c2537a] text-white transition hover:-translate-y-0.5"
+            >
+              <InstagramIcon className="h-5 w-5" />
+            </a>
+          )}
           <a
             href="#online"
             className="hidden rounded-full bg-saffron px-4 py-2.5 text-sm font-extrabold text-ink transition hover:-translate-y-0.5 sm:inline-block"
@@ -159,6 +180,16 @@ export default function Nav() {
               </li>
             ))}
           </ul>
+          {site.instagram && (
+            <a
+              href={`https://www.instagram.com/${site.instagram}/`}
+              target="_blank"
+              rel="noopener"
+              className="mt-4 flex items-center gap-3 rounded-2xl px-3 py-3 font-bold text-ink-soft hover:bg-ink/5"
+            >
+              <InstagramIcon className="h-6 w-6 text-coral" /> @{site.instagram}
+            </a>
+          )}
           <div className="mt-6 grid gap-3">
             <a
               href={site.forms.party}

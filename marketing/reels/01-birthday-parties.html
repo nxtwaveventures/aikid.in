@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Reel 1 — Birthday Story Parties</title>
+<link rel="stylesheet" href="reels.css" />
+<style>
+  body { background: var(--saffron); }
+  .s1 { background: var(--saffron); }
+  .s2 { background: var(--coral); color: white; }
+  .s3 { background: var(--paper); gap: 34px; }
+  .s4 { background: var(--forest); color: white; overflow: hidden; }
+  .strike { position: relative; display: inline-block; }
+  .strike::after {
+    content: ""; position: absolute; left: -10px; right: -10px; top: 52%; height: 14px; border-radius: 8px;
+    background: var(--ink); transform-origin: left; transform: scaleX(0);
+    animation: grow .5s ease-out both; animation-delay: 4.6s;
+  }
+  .bush { position: absolute; left: -10%; right: -10%; bottom: -60px; height: 640px; border-radius: 50% 50% 0 0; background: #2b5c48; }
+  .bush.b2 { bottom: -260px; height: 600px; background: #1e4536; left: -30%; right: 20%; }
+</style>
+</head>
+<body>
+
+<!-- 1. Hook -->
+<section class="scene s1" style="--start:0;--end:3.6">
+  <div class="float" style="position:absolute;top:300px;left:110px;font-size:150px">🎁</div>
+  <div class="float" style="position:absolute;top:360px;right:120px;font-size:130px;animation-delay:-1.4s">📖</div>
+  <h1 class="sign-font" style="font-size:132px;line-height:1.02;color:var(--ink)">
+    <span class="rise" style="--at:.2;display:block">No return gift</span>
+    <span class="rise" style="--at:.6;display:block">is better than</span>
+    <span class="rise" style="--at:1.1;display:block;color:white">a better child.</span>
+  </h1>
+</section>
+
+<!-- 2. Problem → answer -->
+<section class="scene s2" style="--start:3.6;--end:7.6">
+  <p class="display rise" style="--at:3.8;font-size:96px;line-height:1.1">Skip the <span class="strike">bouncy castle.</span></p>
+  <p class="sign-font pop" style="--at:5.3;font-size:120px;line-height:1.05;margin-top:70px;color:var(--ink)">Book a live<br />storyteller 🎙️</p>
+</section>
+
+<!-- 3. What's included -->
+<section class="scene s3" style="--start:7.6;--end:11.7">
+  <p class="chip rise" style="--at:7.7;background:rgba(232,102,79,.12);color:var(--coral)">At every Story Lab party</p>
+  <div class="card rise" style="--at:8.1"><span class="emoji">📖</span>An original story starring the birthday child</div>
+  <div class="card rise" style="--at:8.9"><span class="emoji">🧸</span>Props &amp; puppets kids get to handle</div>
+  <div class="card rise" style="--at:9.7"><span class="emoji">🎭</span>Every child gets a role in the story</div>
+</section>
+
+<!-- 4. CTA -->
+<section class="scene s4" style="--start:11.7;--end:15">
+  <div class="bush"></div><div class="bush b2"></div>
+  <span class="firefly" style="left:140px;top:1240px"></span>
+  <span class="firefly float" style="right:170px;top:1120px"></span>
+  <span class="firefly float" style="left:300px;top:1460px;animation-delay:-1s"></span>
+  <div class="sign swing-in" style="--at:11.8;--rest:-2deg;z-index:2">
+    <svg viewBox="0 0 400 118"><path d="M14 12 H386 Q396 12 396 24 V98 Q396 110 384 110 H16 Q4 110 4 98 V24 Q4 12 14 12Z" fill="#7d5c47"/><path d="M14 6 H386 Q396 6 396 18 V92 Q396 104 384 104 H16 Q4 104 4 92 V18 Q4 6 14 6Z" fill="#a8846c"/></svg>
+    <div class="label"><b>Birthday Story Parties</b><span>Ages 0–10 · Hindi &amp; English</span></div>
+    <div class="tag">Weekends fill fast!</div>
+  </div>
+  <div class="pop" style="--at:12.6;margin-top:90px;z-index:2"><a class="btn pulse" style="background:white;color:var(--coral);z-index:2">🎂 Get a free party quote</a></div>
+  <p class="rise" style="--at:13.2;margin-top:44px;font-weight:800;font-size:44px;z-index:2">Link in bio · aikid.in</p>
+</section>
+
+</body>
+</html>

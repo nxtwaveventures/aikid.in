@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# rendered marketing videos (rebuild from marketing/reels/*.html)
+marketing/**/*.mp4

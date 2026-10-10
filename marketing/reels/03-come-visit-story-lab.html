@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Reel 3 — Come, visit Story Lab</title>
+<link rel="stylesheet" href="reels.css" />
+<style>
+  body { background: var(--forest); color: white; }
+  .bush { position: absolute; left: -10%; right: -10%; bottom: -80px; height: 860px; border-radius: 50% 50% 0 0; background: #2b5c48; }
+  .bush.b2 { bottom: -300px; height: 760px; background: #24503f; left: -40%; right: 30%; }
+  .bush.b3 { bottom: -320px; height: 700px; background: #1e4536; left: 40%; right: -30%; }
+  .post { position: absolute; left: 50%; width: 34px; margin-left: -17px; top: 760px; bottom: 0; background: #1c1028; border-radius: 17px 17px 0 0; }
+  .signs { position: absolute; top: 800px; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; gap: 70px; }
+  .finale { background: rgba(22, 26, 54, .82); }
+</style>
+</head>
+<body>
+
+<div class="bush"></div><div class="bush b2"></div><div class="bush b3"></div>
+<span class="firefly float" style="left:120px;top:1300px"></span>
+<span class="firefly float" style="right:150px;top:1180px;animation-delay:-1.3s"></span>
+<span class="firefly float" style="left:260px;top:1600px;animation-delay:-2s"></span>
+<span class="firefly float" style="right:280px;top:1560px;animation-delay:-.6s"></span>
+
+<!-- Title (stays up through the signs) -->
+<section class="scene" style="--start:0;--end:10.6;justify-content:flex-start;padding-top:280px">
+  <h1 class="sign-font drop" style="--at:.2;font-size:128px;line-height:1;text-shadow:0 8px 0 rgba(0,0,0,.12)">Come, visit<br />Story Lab</h1>
+  <p class="rise" style="--at:1.1;font-weight:800;font-size:42px;margin-top:30px;opacity:.9">Human touch in the world of AI</p>
+</section>
+
+<!-- Signpost -->
+<section class="scene" style="--start:2;--end:10.6;padding:0">
+  <div class="post rise" style="--at:2"></div>
+  <div class="signs">
+    <div class="sign swing-in" style="--at:2.6;--rest:1deg">
+      <svg viewBox="0 0 400 118"><path d="M14 12 H386 Q396 12 396 24 V98 Q396 110 384 110 H16 Q4 110 4 98 V24 Q4 12 14 12Z" fill="#7d5c47"/><path d="M14 6 H386 Q396 6 396 18 V92 Q396 104 384 104 H16 Q4 104 4 92 V18 Q4 6 14 6Z" fill="#a8846c"/></svg>
+      <div class="label"><b>Birthday Story Parties</b><span>We come to you</span></div>
+    </div>
+    <div class="sign right swing-in" style="--at:4.4;--rest:6deg">
+      <svg viewBox="0 0 400 118"><path d="M10 20 H310 V8 L396 64 L310 120 V108 H10 Q2 108 2 98 V30 Q2 20 10 20Z" fill="#7d5c47"/><path d="M10 14 H310 V2 L396 58 L310 114 V102 H10 Q2 102 2 92 V24 Q2 14 10 14Z" fill="#a8846c"/></svg>
+      <div class="label"><b>Story Lab Online</b><span>5 live sessions · ₹999</span></div>
+    </div>
+    <div class="sign left swing-in" style="--at:6.2;--rest:-7deg">
+      <svg viewBox="0 0 400 118"><path d="M390 20 H90 V8 L4 64 L90 120 V108 H390 Q398 108 398 98 V30 Q398 20 390 20Z" fill="#7d5c47"/><path d="M390 14 H90 V2 L4 58 L90 114 V102 H390 Q398 102 398 92 V24 Q398 14 390 14Z" fill="#a8846c"/></svg>
+      <div class="label"><b>Storyteller? Join us</b><span>We're hiring</span></div>
+      <div class="tag">Hiring!</div>
+    </div>
+  </div>
+</section>
+
+<!-- Finale -->
+<section class="scene finale" style="--start:10.4;--end:15">
+  <p class="chip pop" style="--at:10.6;background:var(--coral);color:white">👩‍👩 Women-founded</p>
+  <p class="display rise" style="--at:10.9;font-size:96px;line-height:1.08;margin-top:44px">by Neha &amp;<br />Anamika 💛</p>
+  <p class="rise" style="--at:11.5;font-weight:800;font-size:46px;margin-top:40px;opacity:.9;line-height:1.4">Live storytelling for kids 0–10<br />in Hindi &amp; English</p>
+  <div class="pop" style="--at:12.2;margin-top:70px;z-index:2"><a class="btn pulse" style="background:var(--saffron);color:var(--ink)">Pick your path · link in bio</a></div>
+  <p class="rise" style="--at:12.7;margin-top:40px;font-weight:800;font-size:42px;opacity:.8">aikid.in</p>
+</section>
+
+</body>
+</html>

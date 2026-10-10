@@ -416,6 +416,11 @@ export default function Home() {
           </p>
           <div className="flex flex-col items-center gap-2 sm:items-end">
             <p className="flex flex-wrap justify-center gap-x-5 gap-y-1 font-bold text-paper/80">
+              {site.instagram && (
+                <a href={`https://www.instagram.com/${site.instagram}/`} target="_blank" rel="noopener" className="hover:text-saffron">
+                  📸 @{site.instagram}
+                </a>
+              )}
               <a href={site.forms.hiring} target="_blank" rel="noopener" className="hover:text-saffron">
                 🎙️ We&apos;re hiring storytellers
               </a>
