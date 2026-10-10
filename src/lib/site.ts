@@ -6,7 +6,7 @@ export const site = {
   whatsapp: "919999999999", // TODO: real WhatsApp number, country code first, no "+"
   email: "hello@storylab.in", // TODO: real contact email
   city: "Bengaluru", // TODO: cities you serve
-  instagram: "", // TODO: Instagram handle without "@" — the icon appears in the nav and footer once set
+  instagram: "storylabkid",
   languages: ["English", "Hindi"],
   // Google Forms owned by storylabkid@gmail.com (responses go to a linked Sheet for each)
   forms: {
