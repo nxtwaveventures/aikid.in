@@ -84,9 +84,7 @@ export default function Founders() {
               style={d(i * 150)}
             >
               <span
-                className={`relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full font-sign text-3xl text-white ${
-                  i % 2 ? "bg-saffron" : "bg-ink"
-                }`}
+                className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-leaf font-sign text-3xl text-white"
               >
                 {m.photo ? (
                   <Image src={m.photo} alt={m.name} fill sizes="64px" className="object-cover" />

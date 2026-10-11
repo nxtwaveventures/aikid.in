@@ -51,12 +51,12 @@ export const mentors: { name: string; role: string; bio: string; photo?: string 
   {
     name: "Pradnya",
     role: "Storytelling mentor",
-    bio: "Our storytelling guru and a mother of two. For her, every story must leave kids with real learning — mental models they keep, and smart ways to use modern tech.",
+    bio: "Our storytelling guru and a mother of two. She guides how every story leaves kids with real learning — mental models they keep, and smart use of modern tech.",
   },
   {
     name: "Dr. Tamanna",
     role: "Radiologist · Mentor",
-    bio: "A radiologist and a mother of two, with a gift for turning tricky concepts into stories kids actually remember.",
+    bio: "A radiologist and a mother of two. She guides how we turn tricky scientific concepts into simple stories kids actually understand and remember.",
   },
 ];
 
