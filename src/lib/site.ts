@@ -47,9 +47,17 @@ export const founders: { name: string; role: string; photo?: string }[] = [
 ];
 
 // Mentors. Same photo rule as founders: /public/mentors/<name>.jpg
-export const mentors: { name: string; role: string; photo?: string }[] = [
-  { name: "Pradnaya", role: "Mentor · Story Lab" },
-  { name: "Tamanna", role: "Mentor · Story Lab" },
+export const mentors: { name: string; role: string; bio: string; photo?: string }[] = [
+  {
+    name: "Pradnya",
+    role: "Storytelling mentor",
+    bio: "Our storytelling guru and a mother of two. For her, every story must leave kids with real learning — mental models they keep, and smart ways to use modern tech.",
+  },
+  {
+    name: "Dr. Tamanna",
+    role: "Radiologist · Mentor",
+    bio: "A radiologist and a mother of two, with a gift for turning tricky concepts into stories kids actually remember.",
+  },
 ];
 
 // Impact counters for the second section. TODO: confirm these are your real

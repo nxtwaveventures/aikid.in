@@ -76,11 +76,11 @@ export default function Founders() {
       {/* mentors */}
       <div className="mx-auto max-w-4xl px-4 pb-32 sm:px-6 sm:pb-40">
         <p className="reveal text-center font-extrabold uppercase tracking-[0.2em] text-ink-soft">Guided by our mentors</p>
-        <ul className="mt-10 flex flex-wrap justify-center gap-6">
+        <ul className="mt-10 grid gap-6 sm:grid-cols-2">
           {mentors.map((m, i) => (
             <li
               key={m.name}
-              className="reveal reveal-pop flex items-center gap-4 rounded-full bg-white py-3 pl-3 pr-8 shadow-sm"
+              className="reveal reveal-pop flex gap-5 rounded-[2rem] bg-white p-6 text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-md"
               style={d(i * 150)}
             >
               <span
@@ -88,11 +88,16 @@ export default function Founders() {
                   i % 2 ? "bg-saffron" : "bg-ink"
                 }`}
               >
-                {m.photo ? <Image src={m.photo} alt={m.name} fill sizes="64px" className="object-cover" /> : m.name[0]}
+                {m.photo ? (
+                  <Image src={m.photo} alt={m.name} fill sizes="64px" className="object-cover" />
+                ) : (
+                  m.name.replace("Dr. ", "")[0]
+                )}
               </span>
-              <span className="text-left">
+              <span>
                 <span className="block font-sign text-2xl">{m.name}</span>
-                <span className="block text-sm font-bold text-ink-soft">{m.role}</span>
+                <span className="block text-sm font-extrabold uppercase tracking-wide text-coral">{m.role}</span>
+                <span className="mt-2 block leading-relaxed text-ink-soft">{m.bio}</span>
               </span>
             </li>
           ))}
