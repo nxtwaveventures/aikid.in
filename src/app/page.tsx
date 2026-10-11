@@ -50,22 +50,9 @@ const faqs = [
     "How do online sessions work?",
     `Small live groups on video, ${site.online.perSession} each. You pick a weekly slot after buying; your child keeps the same group and storyteller for all ${site.online.sessions} sessions.`,
   ],
-  [
-    "My child is under 4 — can they join?",
-    "Absolutely. Babies and toddlers join with a parent: we use songs, rhymes, puppets and picture stories instead of story-building, grouped with kids the same age.",
-  ],
 ];
 
 const ageBands = [
-  {
-    ages: "0–2 yrs",
-    name: "Little Ears",
-    body: "Rhymes, lullaby tales, puppets and touch-and-feel props. Parents join in.",
-    tint: "from-leaf/5 to-leaf/15",
-    label: "text-leaf",
-    wave: "text-leaf",
-    path: "M0 30 Q40 5 80 25 T160 22 T240 28 T300 18 V60 H0Z",
-  },
   {
     ages: "3–5 yrs",
     name: "Story Explorers",
@@ -152,10 +139,10 @@ export default function Home() {
         <SectionLabel n="03" center>Every age, every stage</SectionLabel>
         <h2 className="reveal mt-5 text-center font-display text-4xl font-semibold sm:text-6xl">A story for every age</h2>
         <p className="reveal mx-auto mt-6 max-w-2xl text-center text-lg text-ink-soft" style={d(120)}>
-          From a baby&apos;s first rhyme to a ten-year-old&apos;s first plot twist, every story is
+          From a three-year-old&apos;s first giggle to a ten-year-old&apos;s first plot twist, every story is
           matched to the stage your child is at.
         </p>
-        <div className="mt-20 grid gap-6 md:grid-cols-3">
+        <div className="mx-auto mt-20 grid max-w-4xl gap-6 md:grid-cols-2">
           {ageBands.map((b, i) => (
             <div
               key={b.name}

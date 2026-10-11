@@ -6,7 +6,7 @@ import { site } from "@/lib/site";
 export default function ShareButton({ className = "", label = "Share with a parent friend" }: { className?: string; label?: string }) {
   async function share() {
     const url = window.location.origin;
-    const text = `Found this for the kids 👇 Story Lab — live storytellers for birthday parties and small online story sessions (ages 0–10). ${site.tagline}.`;
+    const text = `Found this for the kids 👇 Story Lab — live storytellers for birthday parties and small online story sessions (ages 3–10). ${site.tagline}.`;
     if (navigator.share) {
       try {
         await navigator.share({ title: site.name, text, url });

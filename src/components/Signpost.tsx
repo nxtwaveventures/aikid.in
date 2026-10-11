@@ -137,7 +137,7 @@ export default function Signpost({
           Come, visit Story Lab
         </h1>
         <p className="reveal mx-auto mt-5 max-w-xl text-center text-lg font-semibold text-white/80" style={{ ["--d" as string]: "120ms" }}>
-          {tagline}. Storytelling for kids aged 0–10 — pick a path, every one ends in a story.
+          {tagline}. Storytelling for kids aged 3–10 — pick a path, every one ends in a story.
         </p>
 
         <div className="reveal mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row" style={{ ["--d" as string]: "200ms" }}>

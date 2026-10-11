@@ -46,7 +46,7 @@ export default function OpengraphImage() {
           </div>
           <div style={{ display: "flex", flexDirection: "column", fontSize: 30, color: "rgba(255,255,255,0.9)", marginTop: 24 }}>
             <span>Human touch in the world of AI</span>
-            <span>Storytelling for ages 0–10</span>
+            <span>Storytelling for ages 3–10</span>
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: 34 }}>

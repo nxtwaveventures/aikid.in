@@ -20,7 +20,7 @@ const lilita = Lilita_One({
 });
 
 const description =
-  "Human touch in the world of AI. Live storytelling for kids aged 0–10: birthday party shows and Story Lab Online, 5 live sessions for ₹999.";
+  "Human touch in the world of AI. Live storytelling for kids aged 3–10: birthday party shows and Story Lab Online, 5 live sessions for ₹999.";
 
 export const metadata: Metadata = {
   // TODO: set NEXT_PUBLIC_SITE_URL to your real domain so link previews resolve

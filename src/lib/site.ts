@@ -22,7 +22,7 @@ export const site = {
     price: 10000,
     duration: "60–75 minutes",
     kids: "up to 30 kids",
-    ages: "0–10 years",
+    ages: "3–10 years",
     // Availability shown across the site. Keep this TRUE and up to date —
     // fake scarcity is a "false urgency" dark pattern (illegal under India's CCPA 2023 guidelines).
     status: "Weekends are almost fully booked", // TODO: update weekly
@@ -32,7 +32,7 @@ export const site = {
     price: 999,
     sessions: 5,
     perSession: "40 minutes",
-    ages: "0–10 years",
+    ages: "3–10 years",
     // Next batch — same honesty rule as above.
     nextBatch: "Sat 7 Nov", // TODO: real start date
     seatsTotal: 6,
@@ -97,9 +97,9 @@ export const reviews: Review[] = [
     sample: true,
   },
   {
-    quote: "Lovely with toddlers too — rhymes, puppets and lots of giggles. A calm, happy party for once.",
+    quote: "Even the shy 4-year-olds joined in by the end. A calm, happy party for once.",
     name: "Sample parent",
-    detail: "Parent of a 2-year-old · Birthday party",
+    detail: "Parent of a 4-year-old · Birthday party",
     kind: "party",
     sample: true,
   },
@@ -120,7 +120,7 @@ export const pastSessions: PastSession[] = [
   { title: "Gappu the Grumpy Elephant — 5th birthday", kind: "party", when: "Sample date", where: "Sample venue", kids: 22, emoji: "🐘", sample: true },
   { title: "Story Makers batch — 5 sessions", kind: "online", when: "Sample date", where: "Online", kids: 6, emoji: "💻", sample: true },
   { title: "Rani and the Rain Dragon — 8th birthday", kind: "party", when: "Sample date", where: "Sample venue", kids: 18, emoji: "🐉", sample: true },
-  { title: "Little Ears rhyme circle", kind: "online", when: "Sample date", where: "Online", kids: 5, emoji: "🌙", sample: true },
+  { title: "Story Explorers circle", kind: "online", when: "Sample date", where: "Online", kids: 5, emoji: "🌙", sample: true },
 ];
 
 const showSamples = process.env.NODE_ENV !== "production";
