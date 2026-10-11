@@ -71,12 +71,12 @@ export default function Nav() {
     <header className="sticky top-0 z-30 border-b border-ink/5 bg-paper/85 backdrop-blur-md">
       <AnnouncementBar />
       <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6" aria-label="Main">
-        <a href="#" className="hover-wiggle flex items-center gap-2 font-display text-2xl font-bold">
+        <a href="#" className="hover-wiggle flex shrink-0 items-center gap-2 whitespace-nowrap font-display text-2xl font-bold">
           <Star className="wiggle-target h-6 w-6 text-saffron" />
           Story Lab
         </a>
 
-        <div className="hidden items-center gap-7 text-sm font-bold text-ink-soft lg:flex">
+        <div className="hidden items-center gap-6 whitespace-nowrap text-sm font-bold text-ink-soft lg:flex">
           {sections
             .filter((s) => desktopLinks.includes(s.id))
             .map((s) => (
@@ -111,13 +111,13 @@ export default function Nav() {
           )}
           <a
             href="#online"
-            className="hidden rounded-full bg-saffron px-4 py-2.5 text-sm font-extrabold text-ink transition hover:-translate-y-0.5 sm:inline-block"
+            className="hidden whitespace-nowrap rounded-full bg-saffron px-4 py-2.5 text-sm font-extrabold text-ink transition hover:-translate-y-0.5 sm:inline-block lg:hidden xl:inline-block"
           >
             {site.online.seatsLeft > 0 ? `Only ${site.online.seatsLeft} seats left` : "Join waitlist"} · {inr(site.online.price)}
           </a>
           <a
             href="#book"
-            className="hidden animate-ping-soft rounded-full bg-coral px-4 py-2.5 text-sm font-extrabold text-white transition hover:-translate-y-0.5 sm:inline-block"
+            className="hidden animate-ping-soft whitespace-nowrap rounded-full bg-coral px-4 py-2.5 text-sm font-extrabold text-white transition hover:-translate-y-0.5 sm:inline-block"
           >
             {site.party.showPrice ? "Book a party" : "Party quote"}
           </a>

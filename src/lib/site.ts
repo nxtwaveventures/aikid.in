@@ -46,6 +46,12 @@ export const founders: { name: string; role: string; photo?: string }[] = [
   { name: "Anamika", role: "Co-founder · Storyteller · Story Lab" },
 ];
 
+// Mentors. Same photo rule as founders: /public/mentors/<name>.jpg
+export const mentors: { name: string; role: string; photo?: string }[] = [
+  { name: "Pradnaya", role: "Mentor · Story Lab" },
+  { name: "Tamanna", role: "Mentor · Story Lab" },
+];
+
 // Impact counters for the second section. TODO: confirm these are your real
 // totals before launch, and bump them as you grow — they're shown as "100+" etc.
 export const impact = [

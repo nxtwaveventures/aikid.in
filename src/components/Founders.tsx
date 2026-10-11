@@ -1,7 +1,7 @@
 // "Meet the founders" — women-founded, two co-founders.
 import Image from "next/image";
 import SectionLabel from "@/components/SectionLabel";
-import { founders } from "@/lib/site";
+import { founders, mentors } from "@/lib/site";
 
 const d = (ms: number) => ({ ["--d" as string]: `${ms}ms` }) as React.CSSProperties;
 
@@ -13,7 +13,7 @@ const looks = [
 export default function Founders() {
   return (
     <section id="founders" className="relative scroll-mt-24 overflow-hidden">
-      <div className="mx-auto grid max-w-6xl items-center gap-20 px-4 py-32 sm:px-6 sm:py-40 lg:grid-cols-2">
+      <div className="mx-auto grid max-w-6xl items-center gap-20 px-4 pb-20 pt-32 sm:px-6 sm:pt-40 lg:grid-cols-2">
         {/* portraits */}
         <div className="relative mx-auto flex items-end justify-center gap-6 sm:gap-10">
           {founders.map((f, i) => {
@@ -71,6 +71,32 @@ export default function Founders() {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* mentors */}
+      <div className="mx-auto max-w-4xl px-4 pb-32 sm:px-6 sm:pb-40">
+        <p className="reveal text-center font-extrabold uppercase tracking-[0.2em] text-ink-soft">Guided by our mentors</p>
+        <ul className="mt-10 flex flex-wrap justify-center gap-6">
+          {mentors.map((m, i) => (
+            <li
+              key={m.name}
+              className="reveal reveal-pop flex items-center gap-4 rounded-full bg-white py-3 pl-3 pr-8 shadow-sm"
+              style={d(i * 150)}
+            >
+              <span
+                className={`relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full font-sign text-3xl text-white ${
+                  i % 2 ? "bg-saffron" : "bg-ink"
+                }`}
+              >
+                {m.photo ? <Image src={m.photo} alt={m.name} fill sizes="64px" className="object-cover" /> : m.name[0]}
+              </span>
+              <span className="text-left">
+                <span className="block font-sign text-2xl">{m.name}</span>
+                <span className="block text-sm font-bold text-ink-soft">{m.role}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
