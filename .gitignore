@@ -45,3 +45,6 @@ marketing/**/*.mp4
 marketing/**/*.png
 marketing/**/*.jpg
 marketing/**/*.wav
+
+# confidential notes — never commit
+.private/
