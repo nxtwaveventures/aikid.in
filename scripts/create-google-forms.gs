@@ -9,7 +9,7 @@
  *   4. Copy the 5 links printed in the Execution log into src/lib/site.ts → site.forms
  */
 
-const AGE_OPTIONS = ["0–2 years", "3–5 years", "6–10 years"];
+const AGE_OPTIONS = ["3–5 years", "6–10 years"];
 const LANGS = ["English", "Hindi", "Both — a mix of Hindi & English"];
 const HEARD = ["Instagram", "WhatsApp group", "Friend / family", "School", "Google", "Attended a Story Lab party", "Other"];
 
@@ -97,7 +97,7 @@ function buildPartyForm_() {
 
   form.addPageBreakItem().setTitle("The birthday child");
   text_(form, "Birthday child's name", true, "We weave their name into the story.");
-  choice_(form, "Age they're turning", ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"], true);
+  choice_(form, "Age they're turning", ["3", "4", "5", "6", "7", "8", "9", "10"], true);
   para_(form, "What do they love right now?", false, "Favourite animals, characters, colours, hobbies — anything we can put in their story.");
 
   form.addPageBreakItem().setTitle("The party");
@@ -132,7 +132,7 @@ function buildOnlineForm_() {
   form.addPageBreakItem().setTitle("Your child");
   text_(form, "Child's name", true);
   choice_(form, "Child's age group", AGE_OPTIONS, true);
-  form.addListItem().setTitle("Child's exact age").setChoiceValues(["Under 1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]).setRequired(true);
+  form.addListItem().setTitle("Child's exact age").setChoiceValues(["3", "4", "5", "6", "7", "8", "9", "10"]).setRequired(true);
   checks_(form, "Languages spoken at home", LANGS, true);
   para_(form, "What kind of stories does your child love?", false);
 
@@ -183,7 +183,7 @@ function buildFeedbackForm_() {
 function buildSurveyForm_() {
   const form = newForm_(
     "Story Lab — 2-Minute Parent Survey",
-    "We're building Story Lab: live storytelling for kids aged 0–10 — at birthday parties and in small online groups. A human touch in the world of AI. Your honest answers shape what we build. Thank you!",
+    "We're building Story Lab: live storytelling for kids aged 3–10 — at birthday parties and in small online groups. A human touch in the world of AI. Your honest answers shape what we build. Thank you!",
     "Thank you! 🙏 Your answers really help. Leave your WhatsApp number at the end if you'd like an early-bird offer when we launch."
   );
 
@@ -216,7 +216,7 @@ function buildSurveyForm_() {
 function buildHiringForm_() {
   const form = newForm_(
     "Story Lab — We're Hiring Storytellers 🎙️",
-    "Love kids, stories and a bit of drama? Story Lab is a women-founded storytelling studio for children aged 0–10 — live at birthday parties and in small online groups, in Hindi and English. Tell us about yourself!",
+    "Love kids, stories and a bit of drama? Story Lab is a women-founded storytelling studio for children aged 3–10 — live at birthday parties and in small online groups, in Hindi and English. Tell us about yourself!",
     "Thank you! 🌟 Neha & Anamika read every application. If it's a fit, we'll WhatsApp you to set up a short story audition."
   );
 
@@ -240,4 +240,41 @@ function buildHiringForm_() {
   para_(form, "Anything else we should know?", false);
 
   return short_(form);
+}
+
+// ---------- one-off: move the live forms from ages 0–10 to 3–10 (keeps links + responses) ----------
+
+const LIVE_FORM_IDS = [
+  "1Enu0C48oC78ayr8GzwIhAlPXAjpeAb2rMP-9ooCCU0w", // party quote
+  "1VqzjUGgQ7GIEWsDYAVKVPpX9-e30eCu8CxrmHPHPhkg", // online booking
+  "1UnYwMiEaw2HFnptyBIjaj3P4Rjm1aA9uB3tHm0PSLIU", // feedback
+  "1YMM6UrlRze0EK2_ugx5MZ8W6G3M2veu2D2aS6sqxsm4", // parent survey
+  "1TNXtbclXvqmODkXNfvuTvPdwNCPNC5w6ghyDE6-zFi4", // hiring
+];
+
+function updateAgesTo3to10() {
+  const ages = ["3", "4", "5", "6", "7", "8", "9", "10"];
+  const log = [];
+  LIVE_FORM_IDS.forEach((id) => {
+    const form = FormApp.openById(id);
+    form.setDescription(form.getDescription().replace(/0–10/g, "3–10"));
+    form.getItems().forEach((item) => {
+      const type = item.getType();
+      const title = item.getTitle();
+      let typed = null;
+      if (type === FormApp.ItemType.MULTIPLE_CHOICE) typed = item.asMultipleChoiceItem();
+      if (type === FormApp.ItemType.CHECKBOX) typed = item.asCheckboxItem();
+      if (type === FormApp.ItemType.LIST) typed = item.asListItem();
+      if (!typed) return;
+      const values = typed.getChoices().map((c) => c.getValue());
+      if (values.includes("0–2 years")) {
+        typed.setChoiceValues(AGE_OPTIONS);
+        log.push(form.getTitle() + " → " + title);
+      } else if (title === "Age they're turning" || title === "Child's exact age") {
+        typed.setChoiceValues(ages);
+        log.push(form.getTitle() + " → " + title);
+      }
+    });
+  });
+  Logger.log("Updated:\n" + log.join("\n"));
 }

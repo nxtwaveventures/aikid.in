@@ -42,3 +42,6 @@ next-env.d.ts
 
 # rendered marketing videos (rebuild from marketing/reels/*.html)
 marketing/**/*.mp4
+marketing/**/*.png
+marketing/**/*.jpg
+marketing/**/*.wav

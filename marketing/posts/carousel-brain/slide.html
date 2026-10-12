@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Carousel slide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Lilita+One&family=Nunito:wght@600;800&display=block" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1350px; overflow: hidden; }
+  body { font-family: "Nunito", sans-serif; display: flex; flex-direction: column; justify-content: center; padding: 110px 100px; position: relative; }
+  .num { font-family: "Lilita One"; font-size: 260px; line-height: .8; opacity: .18; position: absolute; top: 70px; right: 90px; }
+  .emoji { font-size: 150px; line-height: 1; }
+  h1 { font-family: "Lilita One"; font-weight: 400; font-size: 112px; line-height: 1.02; margin-top: 40px; }
+  h2 { font-family: "Fraunces", serif; font-weight: 700; font-size: 84px; line-height: 1.08; margin-top: 44px; }
+  p { font-size: 44px; line-height: 1.4; font-weight: 600; margin-top: 36px; opacity: .85; }
+  .foot { position: absolute; left: 100px; right: 100px; bottom: 70px; display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 32px; opacity: .8; }
+  .foot .brand { font-family: "Lilita One"; font-weight: 400; font-size: 40px; }
+  .swipe { font-weight: 800; }
+  .chip { display: inline-block; padding: 14px 30px; border-radius: 999px; font-weight: 800; font-size: 34px; margin: 10px 10px 0 0; }
+</style>
+</head>
+<body>
+<script>
+  // Slide content is chosen with ?n=1..6
+  const slides = {
+    1: { bg: "#3f9469", fg: "#fff", html: `
+      <div class="emoji">🧠📖</div>
+      <h1>5 things a story does for your child's brain</h1>
+      <p>Ages 3–10 · from the Story Lab team</p>`, swipe: "Swipe →" },
+    2: { bg: "#fffcf6", fg: "#1f2547", num: "1", html: `
+      <div class="emoji">🧩</div>
+      <h2>It builds mental models</h2>
+      <p>Stories show cause → effect → consequence. Kids learn how the world works by watching a hero try, fail and try again.</p>`, swipe: "→" },
+    3: { bg: "#161a36", fg: "#fffcf6", num: "2", html: `
+      <div class="emoji">🔬</div>
+      <h2>It makes science stick</h2>
+      <p>A story about a raindrop's journey beats a definition of evaporation. Tricky concepts become pictures kids can remember.</p>`, swipe: "→" },
+    4: { bg: "#f2a531", fg: "#1f2547", num: "3", html: `
+      <div class="emoji">🗣️</div>
+      <h2>It grows their words</h2>
+      <p>New words land better inside a story — in Hindi, in English, or a happy mix of both, the way families really talk.</p>`, swipe: "→" },
+    5: { bg: "#e8664f", fg: "#fff", num: "4", html: `
+      <div class="emoji">🎤</div>
+      <h2>It builds confidence</h2>
+      <p>Kids who get to <i>tell</i> stories — not just hear them — learn to speak up, hold attention and believe their ideas matter.</p>`, swipe: "→" },
+    6: { bg: "#fffcf6", fg: "#1f2547", num: "5", html: `
+      <div class="emoji">💛</div>
+      <h2>It's real connection</h2>
+      <p>A human voice that sees their face light up. A human touch in the world of AI.</p>
+      <div style="margin-top:46px">
+        <span class="chip" style="background:#e8664f;color:#fff">🎂 Birthday story parties</span>
+        <span class="chip" style="background:#f2a531;color:#1f2547">💻 5 online sessions · ₹999</span>
+      </div>
+      <p style="font-weight:800;opacity:1">👉 aikid.in · link in bio</p>`, swipe: "" },
+  };
+  const n = Number(new URLSearchParams(location.search).get("n") || 1);
+  const s = slides[n];
+  document.body.style.background = s.bg;
+  document.body.style.color = s.fg;
+  document.body.innerHTML =
+    (s.num ? `<div class="num">${s.num}</div>` : "") +
+    s.html +
+    `<div class="foot"><span class="brand">★ Story Lab</span><span>${n}/6 <span class="swipe">${s.swipe}</span></span></div>`;
+</script>
+</body>
+</html>
