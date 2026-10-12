@@ -1,0 +1,4 @@
+# never upload these to Vercel — internal notes and marketing sources
+.private
+marketing
+scripts
