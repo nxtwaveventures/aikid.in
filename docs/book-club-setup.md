@@ -1,6 +1,6 @@
 # Book Club bot — setup
 
-1. **Reset the bot token** (it was pasted in chat): @BotFather → /revoke → @storylabclub_bot. Keep the new token private.
+1. **Get the bot token**: @BotFather → /mybots → @storylabclub_bot → API Token. Keep it private. (Recommended, not required: /revoke to get a fresh one, since the current one was shared in chat.)
 2. **Channel and team group** (Telegram):
    - New Channel "Story Lab Book Club", public, link e.g. t.me/storylabbookclub. Add @storylabclub_bot as admin (Post messages).
    - New Group "Story Lab Team" with Neha and Anamika. Add @storylabclub_bot. Send `/chatid` in the group once the bot is live (step 6) and note the number (starts with -100…).
@@ -14,7 +14,7 @@
    - UPI_ID — the UPI ID borrowers pay to
    - BOOKCLUB_SCRIPT_URL, BOOKCLUB_SCRIPT_SECRET — from step 3
    - CRON_SECRET — any long random text
-5. **Deploy**, then run: `vercel env pull .env.local` and `node --env-file=.env.local scripts/telegram-setup.mjs https://www.aikid.in`
+5. **Deploy**, then run: `vercel env pull .env.local --environment=production` and `node --env-file=.env.local scripts/telegram-setup.mjs https://www.aikid.in`
 6. In the team group send `/chatid` → put the number in TELEGRAM_TEAM_CHAT_ID → redeploy.
 7. **Test** with your own phone: /start → join → approve in team group → /add a book → approve → it appears in the channel and on aikid.in/book-club → borrow it → send any photo as "payment" → 💰 Paid → 📥 Returned.
 8. Tell Claude it works → `telegramBot: "storylabclub_bot"` goes into `src/lib/site.ts` and the website switches to "Join on Telegram".
