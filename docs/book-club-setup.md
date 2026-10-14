@@ -11,7 +11,7 @@
    - TELEGRAM_WEBHOOK_SECRET — any long random text (e.g. from a password generator)
    - TELEGRAM_CHANNEL_ID — `@` + the channel's public username, e.g. `@storylabbookclub`
    - TELEGRAM_TEAM_CHAT_ID — from step 6 (add it then, and redeploy)
-   - UPI_ID — the UPI ID borrowers pay to
+   - UPI_ID — optional; while it is not set, borrowers are told "we'll send payment details shortly" and you share them yourselves
    - BOOKCLUB_SCRIPT_URL, BOOKCLUB_SCRIPT_SECRET — from step 3
    - CRON_SECRET — any long random text
 5. **Deploy** (push to GitHub or redeploy in Vercel). Every production deploy connects the bot to Telegram automatically — look for "Telegram setWebhook ✓" in the build log.

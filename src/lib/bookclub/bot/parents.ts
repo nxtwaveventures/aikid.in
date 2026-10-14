@@ -9,7 +9,7 @@ import type { Book, Borrow, Member } from "@/lib/bookclub/types";
 import { site } from "@/lib/site";
 import { ANY, BOOK_ID, BORROW_START, BUTTON, NUMBER, callback, paymentButtons, pressed } from "./buttons";
 import { answer, show, type ParentContext } from "./conversation";
-import { HELP, JUST_TAKEN, ONE_AT_A_TIME, cfg, date, tell, titleOf, who, whoIs } from "./messages";
+import { HELP, JUST_TAKEN, ONE_AT_A_TIME, cfg, date, paymentRequest, tell, titleOf, who, whoIs } from "./messages";
 
 const { price, ownerShare } = site.bookClub;
 const PAGE_SIZE = 5;
@@ -175,7 +175,7 @@ async function requestBorrow(ctx: ParentContext, { club, me }: Membership, bookI
   if (!id) return ctx.reply(JUST_TAKEN);
   shelfChanged();
   await tell(ctx.editMessageReplyMarkup());
-  await ctx.reply(`Great choice! Please pay ₹${price} by UPI to ${cfg().upi} (note: ${id}), then send the payment screenshot here.`);
+  await ctx.reply(paymentRequest(id, price, cfg().upi));
   const request = `📥 Borrow request ${id}: “${titleOf(club, bookId)}” for ${who(me)} — waiting for payment.`;
   await tell(ctx.api.sendMessage(cfg().team, request, { reply_markup: paymentButtons(id) }));
 }

@@ -23,6 +23,12 @@ export const ONE_AT_A_TIME = "You already have a book out or requested — one a
 export const JUST_TAKEN = "Someone just asked for that one — try another from /shelf.";
 export const ALREADY_HANDLED = "Already handled";
 
+// While no UPI ID is configured (payments paused), the team shares payment details by hand.
+export const paymentRequest = (borrowId: string, price: number, upi: string) =>
+  upi
+    ? `Great choice! Please pay ₹${price} by UPI to ${upi} (note: ${borrowId}), then send the payment screenshot here.`
+    : `Great choice! We'll send you the payment details for ₹${price} shortly (your request: ${borrowId}).`;
+
 export const date = (iso: string) =>
   new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: "Asia/Kolkata" });
 export const who = (member?: Member) => (member ? `${member.name}, Flat ${member.flat}` : "someone");
