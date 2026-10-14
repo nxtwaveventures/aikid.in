@@ -1,6 +1,6 @@
 // One-off: points Telegram at the website and sets the bot's commands and descriptions.
 // Run after `vercel env pull .env.local`:  node --env-file=.env.local scripts/telegram-setup.mjs https://www.aikid.in
-const site = process.argv[2];
+const site = process.argv[2]?.replace(/\/+$/, "");
 const token = process.env.TELEGRAM_BOT_TOKEN;
 const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
 if (!site || !token || !secret) {
@@ -29,4 +29,5 @@ const steps = [
 for (const [method, body] of steps) {
   const res = await api(method, body);
   console.log(method, res.ok ? "✓" : res);
+  if (!res.ok) process.exitCode = 1;
 }
