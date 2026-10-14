@@ -1,4 +1,5 @@
-import { getBot, sendReminders } from "@/lib/bookclub/bot";
+import { getBot } from "@/lib/bookclub/bot";
+import { sendReminders } from "@/lib/bookclub/bot/reminders";
 
 // Vercel Cron, 9:00 IST daily (see vercel.json).
 export async function GET(req: Request) {

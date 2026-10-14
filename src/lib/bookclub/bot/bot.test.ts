@@ -3,7 +3,8 @@ import type { Update } from "grammy/types";
 
 vi.mock("next/cache", () => ({ revalidateTag: vi.fn() }));
 
-import { createBot, sendReminders } from "@/lib/bookclub/bot";
+import { createBot } from "@/lib/bookclub/bot";
+import { sendReminders } from "@/lib/bookclub/bot/reminders";
 
 const TEAM = -100;
 const PARENT = 5;
