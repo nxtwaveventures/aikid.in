@@ -70,3 +70,15 @@ export const faqs: [string, string][] = [
     "Tell us and we'll sort it out fairly with both families. Keep the book for one week; if you need longer, borrow it again.",
   ],
 ];
+
+// Novels many families already have at home — the kind of books the club passes around. Covers from Open Library.
+export const greatReads: { title: string; author: string; cover?: number }[] = [
+  { title: "Wonder", author: "R. J. Palacio", cover: 8223160 },
+  { title: "Harry Potter and the Philosopher's Stone", author: "J. K. Rowling", cover: 15155833 },
+  { title: "Percy Jackson and the Lightning Thief", author: "Rick Riordan", cover: 7239831 },
+  { title: "Diary of a Wimpy Kid", author: "Jeff Kinney", cover: 14376136 },
+  { title: "Matilda", author: "Roald Dahl", cover: 12889769 },
+  { title: "The Blue Umbrella", author: "Ruskin Bond", cover: 10389985 },
+  { title: "Grandma's Bag of Stories", author: "Sudha Murty" },
+  { title: "Charlie and the Chocolate Factory", author: "Roald Dahl", cover: 12459564 },
+];

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import GreatReads from "@/components/GreatReads";
 import Shelf from "@/components/Shelf";
 import { Bullets, Button, Facts, Page, Section, Steps } from "@/components/ui";
 import { bookClubRules, bookClubSteps } from "@/lib/content";
@@ -36,6 +37,13 @@ export default async function BookClubPage() {
           )}
         </Section>
       )}
+
+      <Section id="great-reads" title="Books we hope to share">
+        <p className="mb-6 text-ink-soft">
+          Favourites many homes already have. One copy, read again and again — have one of these on your shelf? Share it.
+        </p>
+        <GreatReads />
+      </Section>
 
       <Section title="How it works">
         <Steps items={bookClubSteps} />
