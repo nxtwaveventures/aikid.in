@@ -9,6 +9,9 @@
   --mint: #ddf1e6;
   --lavender: #e7e2f6;
   --butter: #fff3cf;
+  /* signpost hero */
+  --coral: #e8664f;
+  --saffron: #f2a531;
 }
 
 @theme inline {
@@ -20,8 +23,11 @@
   --color-mint: var(--mint);
   --color-lavender: var(--lavender);
   --color-butter: var(--butter);
+  --color-coral: var(--coral);
+  --color-saffron: var(--saffron);
   --font-display: var(--font-fraunces);
   --font-sans: var(--font-nunito);
+  --font-sign: var(--font-lilita);
 }
 
 html {
@@ -44,6 +50,19 @@ body {
   transform-origin: 50% 0;
   animation: bunting-sway 4s ease-in-out infinite;
 }
+/* signpost hero — fireflies drift, hills and tags bob */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-22px) rotate(2deg); }
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+.animate-float { animation: float 7s ease-in-out infinite; }
+.animate-bob { animation: bob 3.5s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) {
-  .bunting-flag { animation: none; }
+  html { scroll-behavior: auto; }
+  .bunting-flag, .animate-float, .animate-bob { animation: none; }
 }

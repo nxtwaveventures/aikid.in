@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Nunito } from "next/font/google";
+import { Fraunces, Lilita_One, Nunito } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
@@ -13,6 +13,12 @@ const fraunces = Fraunces({
 const nunito = Nunito({
   variable: "--font-nunito",
   subsets: ["latin"],
+});
+
+const lilita = Lilita_One({
+  variable: "--font-lilita",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 const description =
@@ -35,7 +41,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${nunito.variable} antialiased`} suppressHydrationWarning>
+    <html lang="en" className={`${fraunces.variable} ${nunito.variable} ${lilita.variable} antialiased`} suppressHydrationWarning>
       <body className="min-h-full">
         <Nav />
         <main>{children}</main>
