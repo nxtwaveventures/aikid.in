@@ -48,3 +48,18 @@ describe("add", () => {
     expect(advance(startAdd("42").session!, { kind: "skip" }).session?.step).toBe("title");
   });
 });
+
+describe("recovery from a stale session", () => {
+  it("restarts the flow when the stored step is unknown", () => {
+    const s = advance({ telegramId: "42", flow: "add", step: "bogus", draft: { title: "x" } }, { kind: "text", text: "Wonder" });
+    expect(s.session?.step).toBe("title");
+    expect(s.session?.draft).toEqual({});
+    expect(s.error).toBeTruthy();
+  });
+
+  it("ends the conversation when the stored flow is unknown", () => {
+    const s = advance({ telegramId: "42", flow: "nope" as never, step: "x", draft: {} }, { kind: "skip" });
+    expect(s.session).toBeNull();
+    expect(s.error).toBeTruthy();
+  });
+});

@@ -40,7 +40,9 @@ export const startAdd = (telegramId: string) => at("add", {}, telegramId, 0);
 
 export function advance(session: Session, input: Input): Step {
   const fields = flows[session.flow];
+  if (!fields) return { session: null, error: "Sorry, something got mixed up — please start again." };
   const i = fields.findIndex((f) => f.key === session.step);
+  if (i < 0) return { ...at(session.flow, {}, session.telegramId, 0), error: "Let's start again." };
   const f = fields[i];
   const again = (error: string): Step => ({ session, ask: f.ask, error });
 
