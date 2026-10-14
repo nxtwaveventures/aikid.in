@@ -4,13 +4,17 @@ import { site } from "@/lib/site";
 const { party, online } = site;
 
 export const partyLine =
-  party.slotsLeftThisMonth === 0
+  party.slotsLeftThisMonth === null
+    ? party.status
+    : party.slotsLeftThisMonth === 0
     ? "Fully booked this month — book ahead for next month"
     : `${party.status} · only ${party.slotsLeftThisMonth} date${party.slotsLeftThisMonth === 1 ? "" : "s"} left this month`;
 
 export const onlineLine =
   online.seatsLeft === 0
     ? `Batch starting ${online.nextBatch} is full — join the waitlist`
+    : online.seatsLeft === online.seatsTotal
+    ? `First batch starts ${online.nextBatch} · ${online.seatsTotal} seats`
     : `Only ${online.seatsLeft} of ${online.seatsTotal} seats left · batch starts ${online.nextBatch}`;
 
 function LiveDot({ color }: { color: string }) {

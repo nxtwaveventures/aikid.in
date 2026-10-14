@@ -40,13 +40,19 @@ export default function Impact() {
           grandparents on the phone, to cousins at the next family function.
         </p>
 
-        <div className="mt-20 grid grid-cols-2 gap-5 lg:grid-cols-4 lg:grid-rows-2">
-          {/* hero stat */}
-          <Stat item={first} tone={tones[0]} big index={0} className="col-span-2 lg:row-span-2" />
-          {rest.map((item, i) => (
-            <Stat key={item.label} item={item} tone={tones[i + 1]} index={i + 1} />
-          ))}
-        </div>
+        {rest.length === 0 ? (
+          <div className="mx-auto mt-20 max-w-md">
+            <Stat item={first} tone={tones[0]} big index={0} />
+          </div>
+        ) : (
+          <div className="mt-20 grid grid-cols-2 gap-5 lg:grid-cols-4 lg:grid-rows-2">
+            {/* hero stat */}
+            <Stat item={first} tone={tones[0]} big index={0} className="col-span-2 lg:row-span-2" />
+            {rest.map((item, i) => (
+              <Stat key={item.label} item={item} tone={tones[i + 1]} index={i + 1} />
+            ))}
+          </div>
+        )}
 
         <p className="reveal mt-14 text-center font-sign text-2xl text-ink/80 sm:text-3xl" style={d(300)}>
           …and counting. Your child could be next. ✨

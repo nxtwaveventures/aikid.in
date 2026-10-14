@@ -84,17 +84,19 @@ export default function Nav() {
                 {s.label}
               </a>
             ))}
-          <a
-            href="#reviews"
-            className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 transition hover:bg-saffron/30 ${
-              active === "reviews" ? "bg-saffron/40" : "bg-saffron/15"
-            }`}
-          >
-            <span className="tracking-tighter text-saffron" aria-hidden>
-              ★★★★★
-            </span>
-            <span className="text-ink">{site.reviewCount}+ reviews</span>
-          </a>
+          {site.reviewCount >= 5 && (
+            <a
+              href="#reviews"
+              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 transition hover:bg-saffron/30 ${
+                active === "reviews" ? "bg-saffron/40" : "bg-saffron/15"
+              }`}
+            >
+              <span className="tracking-tighter text-saffron" aria-hidden>
+                ★★★★★
+              </span>
+              <span className="text-ink">{site.reviewCount}+ reviews</span>
+            </a>
+          )}
         </div>
 
         <div className="flex items-center gap-2">
@@ -113,7 +115,7 @@ export default function Nav() {
             href="#online"
             className="hidden whitespace-nowrap rounded-full bg-saffron px-4 py-2.5 text-sm font-extrabold text-ink transition hover:-translate-y-0.5 sm:inline-block lg:hidden xl:inline-block"
           >
-            {site.online.seatsLeft > 0 ? `Only ${site.online.seatsLeft} seats left` : "Join waitlist"} · {inr(site.online.price)}
+            {site.online.seatsLeft > 0 ? "Book online" : "Join waitlist"} · {inr(site.online.price)}
           </a>
           <a
             href="#book"

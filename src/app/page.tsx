@@ -125,8 +125,8 @@ export default function Home() {
         partyHref={site.forms.party}
         onlineHref={site.forms.online}
         tagline={site.tagline}
-        partyTag={site.party.slotsLeftThisMonth > 0 ? "Almost full!" : "Fully booked"}
-        onlineTag={site.online.seatsLeft > 0 ? `${site.online.seatsLeft} seats left` : "Waitlist"}
+        partyTag={site.party.slotsLeftThisMonth === 0 ? "Fully booked" : "Now booking"}
+        onlineTag={site.online.seatsLeft > 0 ? "First batch" : "Waitlist"}
         onlinePrice={inr(site.online.price)} partyPrice={partyPriceLabel} />
 
       {/* Second section: impact */}

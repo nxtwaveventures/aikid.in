@@ -2,7 +2,7 @@
 export const site = {
   name: "Story Lab",
   tagline: "Human touch in the world of AI",
-  reviewCount: 100, // TODO: your real number of parent reviews (shown as "100+ reviews" in the nav)
+  reviewCount: 0, // real parent reviews only; the nav badge appears once this is 5 or more
   whatsapp: "919999999999", // TODO: real WhatsApp number, country code first, no "+"
   email: "hello@storylab.in", // TODO: real contact email
   city: "Bengaluru", // TODO: cities you serve
@@ -25,8 +25,9 @@ export const site = {
     ages: "3–10 years",
     // Availability shown across the site. Keep this TRUE and up to date —
     // fake scarcity is a "false urgency" dark pattern (illegal under India's CCPA 2023 guidelines).
-    status: "Weekends are almost fully booked", // TODO: update weekly
-    slotsLeftThisMonth: 2, // TODO: real number of open weekend dates; 0 shows "Fully booked"
+    status: "Now booking our first birthday parties",
+    // Real number of open weekend dates, or null to show only `status`. 0 shows "Fully booked".
+    slotsLeftThisMonth: null as number | null,
   },
   online: {
     price: 999,
@@ -36,7 +37,7 @@ export const site = {
     // Next batch — same honesty rule as above.
     nextBatch: "Sat 7 Nov", // TODO: real start date
     seatsTotal: 6,
-    seatsLeft: 3, // TODO: update as parents book; 0 shows "Batch full — join the waitlist"
+    seatsLeft: 6, // update as parents book; 0 shows "Batch full — join the waitlist"
   },
 };
 
@@ -60,14 +61,10 @@ export const mentors: { name: string; role: string; bio: string; photo?: string 
   },
 ];
 
-// Impact counters for the second section. TODO: confirm these are your real
-// totals before launch, and bump them as you grow — they're shown as "100+" etc.
+// Impact counters for the second section. Only real, current totals — add more
+// entries (stories told, parties…) once you have real numbers for them.
 export const impact = [
-  { value: 100, label: "Stories told", emoji: "📖" },
-  { value: 200, label: "Kids who leaned in", emoji: "🧒" },
-  { value: 10, label: "Birthday parties", emoji: "🎂" },
-  { value: 500, label: "Happy parents", emoji: "💛" },
-  { value: 1000, label: "Happy relatives", emoji: "👵" },
+  { value: 10, label: "Happy moms", emoji: "💛" },
 ];
 
 // Parent reviews. Entries marked `sample: true` are placeholders: they show in

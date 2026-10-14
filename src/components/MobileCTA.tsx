@@ -19,7 +19,7 @@ export default function MobileCTA() {
           rel="noopener"
           className="rounded-full bg-saffron px-3 py-3 text-center text-sm font-extrabold text-ink shadow-[0_4px_0_#b77612]"
         >
-          {site.online.seatsLeft > 0 ? `💻 ${site.online.seatsLeft} seats · ${inr(site.online.price)}` : "💻 Join waitlist"}
+          {site.online.seatsLeft > 0 ? `💻 Online · ${inr(site.online.price)}` : "💻 Join waitlist"}
         </a>
       </div>
     </div>
