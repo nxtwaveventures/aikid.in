@@ -1,33 +1,39 @@
-import Impact from "@/components/Impact";
 import LegacyHashRedirect from "@/components/LegacyHashRedirect";
-import ProgramCards from "@/components/sections/ProgramCards";
-import ShareButton from "@/components/ShareButton";
-import Signpost from "@/components/Signpost";
-import { inr, partyPriceLabel, site } from "@/lib/site";
+import { Card } from "@/components/ui";
+import { impact, inr, partyPriceLabel, site } from "@/lib/site";
 
 export default function Home() {
+  const moms = impact[0];
   return (
-    <>
+    <div className="mx-auto max-w-3xl px-4 py-20 sm:px-6 sm:py-28">
       <LegacyHashRedirect />
-      <Signpost
-        hiringUrl={site.forms.hiring}
-        partyHref={site.forms.party}
-        onlineHref={site.forms.online}
-        tagline={site.tagline}
-        partyTag={site.party.slotsLeftThisMonth === 0 ? "Fully booked" : "Now booking"}
-        onlineTag={site.online.seatsLeft > 0 ? "First batch" : "Waitlist"}
-        onlinePrice={inr(site.online.price)}
-        partyPrice={partyPriceLabel}
-      />
-      <Impact />
-      <ProgramCards />
-      <div className="reveal flex flex-col items-center gap-3 px-4 pb-28 text-center">
-        <p className="font-semibold text-ink-soft">Know a parent who&apos;d love this?</p>
-        <ShareButton className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-7 py-3.5 font-extrabold text-white shadow-[0_6px_0_#1a9e4b] transition hover:-translate-y-1" />
-        <a href={site.forms.feedback} target="_blank" rel="noopener" className="mt-4 font-bold text-ink-soft underline-offset-4 hover:text-coral hover:underline">
-          💌 Been to a session? Share your feedback
-        </a>
+      <h1 className="font-display text-5xl font-medium leading-tight sm:text-6xl">Story Lab</h1>
+      <p className="mt-5 max-w-xl text-xl leading-relaxed text-ink-soft">
+        Live storytelling for kids aged 3–10, in English &amp; Hindi. {site.tagline}.
+      </p>
+
+      <div className="mt-14 grid gap-5 sm:grid-cols-2">
+        <Card
+          href="/parties"
+          tint="bg-peach"
+          title="Birthday Story Parties"
+          body="A live story show starring the birthday child — at your home or venue."
+          meta={partyPriceLabel}
+        />
+        <Card
+          href="/online"
+          tint="bg-mint"
+          title="Story Lab Online"
+          body={`${site.online.sessions} live sessions where kids learn to tell their own story.`}
+          meta={inr(site.online.price)}
+        />
       </div>
-    </>
+
+      {moms && (
+        <p className="mt-14 text-ink-soft">
+          <span className="font-bold text-ink">{moms.value} {moms.label.toLowerCase()}</span> and counting.
+        </p>
+      )}
+    </div>
   );
 }

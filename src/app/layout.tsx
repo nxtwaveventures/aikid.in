@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { Fraunces, Lilita_One, Nunito } from "next/font/google";
+import { Fraunces, Nunito } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
-import MobileCTA from "@/components/MobileCTA";
 import Nav from "@/components/Nav";
-import ScrollReveal from "@/components/ScrollReveal";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -17,12 +15,6 @@ const nunito = Nunito({
   subsets: ["latin"],
 });
 
-const lilita = Lilita_One({
-  variable: "--font-lilita",
-  subsets: ["latin"],
-  weight: "400",
-});
-
 const description =
   "Human touch in the world of AI. Live storytelling for kids aged 3–10: birthday party shows and Story Lab Online, 5 live sessions for ₹999.";
 
@@ -32,28 +24,22 @@ export const metadata: Metadata = {
   title: { default: "Story Lab — Human touch in the world of AI", template: "%s · Story Lab" },
   description,
   openGraph: {
-    title: "Come, visit Story Lab 🎂📖",
+    title: "Story Lab — live storytelling for kids",
     description,
     type: "website",
     locale: "en_IN",
     siteName: "Story Lab",
   },
-  twitter: { card: "summary_large_image", title: "Come, visit Story Lab", description },
+  twitter: { card: "summary_large_image", title: "Story Lab — live storytelling for kids", description },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${nunito.variable} ${lilita.variable} antialiased`} suppressHydrationWarning>
-      <head>
-        {/* lets CSS hide .reveal elements only when JS will reveal them */}
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
-      </head>
+    <html lang="en" className={`${fraunces.variable} ${nunito.variable} antialiased`} suppressHydrationWarning>
       <body className="min-h-full">
-        <ScrollReveal />
         <Nav />
-        <main className="overflow-x-clip">{children}</main>
+        <main>{children}</main>
         <Footer />
-        <MobileCTA />
       </body>
     </html>
   );
