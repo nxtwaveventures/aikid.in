@@ -1,51 +1,49 @@
-// Paper bunting: pastel triangle flags hanging from a thread, gently swaying.
-const colors = ["#f9c6c9", "#fcd9b8", "#fff0b3", "#cdebc5", "#c8e1f5", "#d9ccf2"];
+// A small paper bunting: coloured card triangles hanging from jute twine, gently swaying.
+const colors = ["#f2c84b", "#5fb87a", "#3f9bd1", "#d2559f", "#f08a4b", "#8f7ad8"];
 
-const W = 1200;
-const TOP = 14; // where the thread is pinned
-const SAG = 46; // how far each swag dips
-const SWAGS = 2;
-const PER_SWAG = 8;
-const FLAG_W = 46;
-const FLAG_H = 58;
+const W = 420;
+const TOP = 10; // where the twine is pinned at each end
+const SAG = 34; // how far the middle dips
+const FLAGS = 6;
+const FLAG_W = 52;
+const FLAG_H = 50;
 
-// point and slope on one swag (quadratic curve) at t ∈ [0, 1]
-function onSwag(i: number, t: number) {
-  const x0 = (W / SWAGS) * i;
-  const x1 = x0 + W / SWAGS;
-  const xc = (x0 + x1) / 2;
+// point and slope on the twine (quadratic curve) at t ∈ [0, 1]
+function onTwine(t: number) {
+  const xc = W / 2;
   const yc = TOP + SAG * 2;
-  const x = (1 - t) ** 2 * x0 + 2 * t * (1 - t) * xc + t ** 2 * x1;
+  const x = 2 * t * (1 - t) * xc + t ** 2 * W;
   const y = (1 - t) ** 2 * TOP + 2 * t * (1 - t) * yc + t ** 2 * TOP;
-  const dx = 2 * (1 - t) * (xc - x0) + 2 * t * (x1 - xc);
+  const dx = 2 * (1 - t) * xc + 2 * t * (W - xc);
   const dy = 2 * (1 - t) * (yc - TOP) + 2 * t * (TOP - yc);
   return { x, y, angle: (Math.atan2(dy, dx) * 180) / Math.PI };
 }
 
-const flags = Array.from({ length: SWAGS }, (_, i) =>
-  Array.from({ length: PER_SWAG }, (_, k) => ({ ...onSwag(i, (k + 0.5) / PER_SWAG), n: i * PER_SWAG + k })),
-).flat();
+const flags = Array.from({ length: FLAGS }, (_, n) => ({ ...onTwine((n + 0.5) / FLAGS), n }));
+const twine = `M0 ${TOP} Q${W / 2} ${TOP + SAG * 2} ${W} ${TOP}`;
 
-const thread = Array.from({ length: SWAGS }, (_, i) => {
-  const x0 = (W / SWAGS) * i;
-  return `M${x0} ${TOP} Q${x0 + W / SWAGS / 2} ${TOP + SAG * 2} ${x0 + W / SWAGS} ${TOP}`;
-}).join(" ");
-
-export default function Bunting() {
+export default function Bunting({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox={`0 0 ${W} ${TOP + SAG + FLAG_H + 12}`} className="block w-full" aria-hidden>
-      <path d={thread} fill="none" stroke="#c9bfb2" strokeWidth="1.5" />
+    <svg viewBox={`-6 0 ${W + 12} ${TOP + SAG + FLAG_H + 10}`} className={`block w-full max-w-[420px] ${className}`} aria-hidden>
+      <defs>
+        <filter id="paper-shadow" x="-20%" y="-10%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="2" stdDeviation="1.5" floodColor="#2e3142" floodOpacity="0.18" />
+        </filter>
+      </defs>
+      {/* jute twine: a solid cord with a darker twist pattern on top */}
+      <path d={twine} fill="none" stroke="#c4a173" strokeWidth="3" strokeLinecap="round" />
+      <path d={twine} fill="none" stroke="#8d6b44" strokeWidth="3" strokeDasharray="1.5 3" strokeLinecap="round" />
       {flags.map((f) => (
         <g key={f.n} transform={`translate(${f.x.toFixed(1)} ${f.y.toFixed(1)}) rotate(${f.angle.toFixed(1)})`}>
-          <g className="bunting-flag" style={{ animationDelay: `${(f.n % 5) * -0.7}s` }}>
+          <g className="bunting-flag" style={{ animationDelay: `${f.n * -0.6}s` }} filter="url(#paper-shadow)">
             <polygon points={`${-FLAG_W / 2},0 ${FLAG_W / 2},0 0,${FLAG_H}`} fill={colors[f.n % colors.length]} />
-            {/* paper fold: right half a touch darker, crease down the middle */}
-            <polygon points={`0,0 ${FLAG_W / 2},0 0,${FLAG_H}`} fill="#2e3142" opacity="0.05" />
-            <line x1="0" y1="0" x2="0" y2={FLAG_H} stroke="#fff" strokeOpacity="0.5" strokeWidth="1" />
-            <rect x={-FLAG_W / 2} y="-2" width={FLAG_W} height="4" rx="2" fill="#fffdf9" opacity="0.6" />
+            {/* card-paper sheen: a faint light edge on the left */}
+            <polygon points={`${-FLAG_W / 2},0 ${-FLAG_W / 2 + 10},0 0,${FLAG_H}`} fill="#fff" opacity="0.14" />
           </g>
         </g>
       ))}
+      {/* twine passes in front of the flag tops, like it's threaded through */}
+      <path d={twine} fill="none" stroke="#c4a173" strokeWidth="2" strokeLinecap="round" opacity="0.9" />
     </svg>
   );
 }
