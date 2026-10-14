@@ -32,16 +32,19 @@ export function findDuplicate(books: Book[], key: string): Book | undefined {
   return books.find((b) => b.matchKey === key && (b.status === "pending" || b.status === "listed"));
 }
 
-export function nextId(prefix: "B" | "L", ids: string[]): string {
-  const max = Math.max(0, ...ids.filter((id) => id.startsWith(prefix)).map((id) => Number(id.slice(1)) || 0));
-  return prefix + String(max + 1).padStart(3, "0");
-}
-
 const open = (b: Borrow) => b.state === "requested" || b.state === "out";
 
 export function bookState(bookId: string, borrows: Borrow[]): "available" | "requested" | "out" {
   const current = borrows.find((b) => b.bookId === bookId && open(b));
   return current ? (current.state as "requested" | "out") : "available";
+}
+
+/** Listed books, available ones first, then by title. */
+export function shelfOrder(books: Book[], borrows: Borrow[]) {
+  return books
+    .filter((book) => book.status === "listed")
+    .map((book) => ({ book, available: bookState(book.id, borrows) === "available" }))
+    .sort((x, y) => Number(y.available) - Number(x.available) || x.book.title.localeCompare(y.book.title));
 }
 
 export function canRequest(

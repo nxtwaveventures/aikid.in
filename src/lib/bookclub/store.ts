@@ -22,6 +22,8 @@ async function call<T extends Reply = Reply>(body: Record<string, unknown>): Pro
   return data;
 }
 
+export type Club = Awaited<ReturnType<typeof readAll>>;
+
 export async function readAll() {
   const raw = await call<Record<Tab, string[][]> & Reply>({ op: "read" });
   const rows = <T>(tab: Tab) => (raw[tab] ?? []).map((r) => fromRow<T>(tab, r));
@@ -61,5 +63,3 @@ export async function saveIf(tab: Tab, obj: object, expect: Partial<Record<strin
 export async function remove(tab: Tab, id: string) {
   await call({ op: "delete", tab, id });
 }
-
-export const keyOf = (tab: Tab) => columns[tab][0];

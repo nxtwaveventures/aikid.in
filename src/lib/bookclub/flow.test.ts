@@ -39,6 +39,13 @@ describe("add", () => {
     expect(done.done).toEqual({ flow: "add", draft: { title: "Wonder", author: "R.J. Palacio", condition: "Good", photoFileId: "AgAC123" } });
   });
 
+  it("signals once title and author are both known, so duplicates can be caught early", () => {
+    const title = go(startAdd("42"), { kind: "text", text: "Wonder" });
+    expect(title.titleAndAuthor).toBeUndefined();
+    expect(advance(title.session!, { kind: "text", text: "x".repeat(81) }).titleAndAuthor).toBeUndefined();
+    expect(advance(title.session!, { kind: "text", text: "R.J. Palacio" }).titleAndAuthor).toEqual({ title: "Wonder", author: "R.J. Palacio" });
+  });
+
   it("skipping the photo finishes with an empty photo", () => {
     const s = go(startAdd("42"), { kind: "text", text: "Holes" }, { kind: "text", text: "Louis Sachar" }, { kind: "text", text: "Good" });
     expect(advance(s.session!, { kind: "skip" }).done?.draft.photoFileId).toBe("");

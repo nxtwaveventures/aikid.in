@@ -2,7 +2,7 @@
 import { Bot, InlineKeyboard, Keyboard, type Context } from "grammy";
 import { revalidateTag } from "next/cache";
 import { advance, startAdd, startJoin, type Input, type Step } from "@/lib/bookclub/flow";
-import { bookState, canRequest, cancel, findDuplicate, matchKey, pay, payouts, reminders, returnBook } from "@/lib/bookclub/rules";
+import { canRequest, cancel, findDuplicate, matchKey, pay, payouts, reminders, returnBook, shelfOrder } from "@/lib/bookclub/rules";
 import * as store from "@/lib/bookclub/store";
 import type { Book, Borrow, Member } from "@/lib/bookclub/types";
 import { site } from "@/lib/site";
@@ -82,8 +82,8 @@ export function createBot(token: string) {
     if (!session) return ctx.reply(HELP);
     const next = advance(session, input);
     // Duplicate check as soon as we know title + author.
-    if (session.flow === "add" && session.step === "author" && !next.error) {
-      const dup = findDuplicate(data.books, matchKey(next.session!.draft.title, next.session!.draft.author));
+    if (next.titleAndAuthor) {
+      const dup = findDuplicate(data.books, matchKey(next.titleAndAuthor.title, next.titleAndAuthor.author));
       if (dup) {
         await store.remove("Sessions", id);
         return ctx.reply(`We already have “${dup.title}” listed — thank you! Do you have another novel to share? Send /add.`);
@@ -172,19 +172,17 @@ export function createBot(token: string) {
   async function shelf(ctx: Context, page: number, edit: boolean) {
     const ok = await member(ctx);
     if (!ok) return;
-    const listed = ok.data.books.filter((b) => b.status === "listed");
-    const sorted = [...listed].sort((a, b) => Number(bookState(a.id, ok.data.borrows) !== "available") - Number(bookState(b.id, ok.data.borrows) !== "available"));
+    const sorted = shelfOrder(ok.data.books, ok.data.borrows);
     const slice = sorted.slice(page * PAGE, page * PAGE + PAGE);
     if (!slice.length) return ctx.reply("The shelf is empty right now — share a novel with /add!");
     const kb = new InlineKeyboard();
-    const lines = slice.map((b) => {
-      const state = bookState(b.id, ok.data.borrows);
-      if (state === "available") kb.text(`Borrow: ${b.title}`, `bw:${b.id}`).row();
-      return `${state === "available" ? "🟢" : "⏳"} ${b.title} — ${b.author}`;
+    const lines = slice.map(({ book: b, available }) => {
+      if (available) kb.text(`Borrow: ${b.title}`, `bw:${b.id}`).row();
+      return `${available ? "🟢" : "⏳"} ${b.title} — ${b.author}`;
     });
     if (page > 0) kb.text("◀ Back", `sh:${page - 1}`);
     if ((page + 1) * PAGE < sorted.length) kb.text("More ▶", `sh:${page + 1}`);
-    const text = `📚 The shelf (${listed.length} books) · ₹${price} a week\n\n${lines.join("\n")}`;
+    const text = `📚 The shelf (${sorted.length} books) · ₹${price} a week\n\n${lines.join("\n")}`;
     return edit ? ctx.editMessageText(text, { reply_markup: kb }) : ctx.reply(text, { reply_markup: kb });
   }
   dm.command("shelf", (ctx) => shelf(ctx, 0, false));

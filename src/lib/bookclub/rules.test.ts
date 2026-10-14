@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  bookState, canRequest, cancel, findDuplicate, matchKey, nextId, pay, payouts, reminders, returnBook,
+  bookState, canRequest, cancel, findDuplicate, matchKey, pay, payouts, reminders, returnBook, shelfOrder,
 } from "@/lib/bookclub/rules";
 import type { Book, Borrow } from "@/lib/bookclub/types";
 
@@ -41,20 +41,23 @@ describe("findDuplicate", () => {
   });
 });
 
-describe("nextId", () => {
-  it("counts up from the highest id", () => {
-    expect(nextId("B", [])).toBe("B001");
-    expect(nextId("B", ["B001", "B009", "B004"])).toBe("B010");
-    expect(nextId("L", ["L099"])).toBe("L100");
-  });
-});
-
 describe("availability", () => {
   it("is out while paid and not returned, requested while waiting for payment", () => {
     expect(bookState("B001", [])).toBe("available");
     expect(bookState("B001", [borrow("L1")])).toBe("requested");
     expect(bookState("B001", [borrow("L1", { state: "out" })])).toBe("out");
     expect(bookState("B001", [borrow("L1", { state: "returned" }), borrow("L2", { state: "cancelled" })])).toBe("available");
+  });
+
+  it("orders the shelf: listed books only, available first, then by title", () => {
+    const books = [
+      book("B001", { title: "Wonder" }),
+      book("B002", { title: "Holes" }),
+      book("B003", { title: "Matilda" }),
+      book("B004", { title: "Alone", status: "pending" }),
+    ];
+    const shelf = shelfOrder(books, [borrow("L1", { bookId: "B002", state: "out" })]);
+    expect(shelf.map(({ book, available }) => [book.title, available])).toEqual([["Matilda", true], ["Wonder", true], ["Holes", false]]);
   });
 
   it("allows one open request per book and one book per member", () => {
