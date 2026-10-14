@@ -31,7 +31,12 @@ function setupBookClub() {
 }
 
 function doPost(e) {
-  const req = JSON.parse(e.postData.contents);
+  let req;
+  try {
+    req = JSON.parse(e.postData.contents);
+  } catch (err) {
+    return json_({ error: "bad-request" });
+  }
   const props = PropertiesService.getScriptProperties();
   if (!req.secret || req.secret !== props.getProperty("SECRET")) return json_({ error: "forbidden" });
   const ss = SpreadsheetApp.openById(props.getProperty("SHEET_ID"));
@@ -50,9 +55,39 @@ function doPost(e) {
   lock.waitLock(10000);
   try {
     const sh = ss.getSheetByName(req.tab);
-    const ids = sh.getRange(1, 1, Math.max(sh.getLastRow(), 1), 1).getDisplayValues().map(function (r) { return r[0]; });
+    const all = sh.getRange(1, 1, Math.max(sh.getLastRow(), 1), sh.getLastColumn() || 1).getDisplayValues();
+    const ids = all.map(function (r) { return r[0]; });
+    const rows = all.slice(1).filter(function (r) { return r[0] !== ""; });
     const at = ids.indexOf(String(req.id)); // 0 is the header row
-    if (req.op === "upsert") {
+    let logged = req.row || req.id;
+    if (req.op === "insert") {
+      if (req.tab !== "Books" && req.tab !== "Borrows") return json_({ error: "bad-tab" });
+      if (req.tab === "Books") {
+        const dup = rows.some(function (r) { return r[3] === req.row[3] && (r[7] === "pending" || r[7] === "listed"); });
+        if (dup) return json_({ error: "conflict" });
+      } else {
+        const busy = rows.some(function (r) {
+          return (r[8] === "requested" || r[8] === "out") && (r[1] === req.row[1] || r[2] === req.row[2]);
+        });
+        if (busy) return json_({ error: "conflict" });
+      }
+      let max = 0;
+      rows.forEach(function (r) {
+        if (String(r[0]).indexOf(req.prefix) === 0) max = Math.max(max, parseInt(String(r[0]).slice(req.prefix.length), 10) || 0);
+      });
+      const id = req.prefix + ("000" + (max + 1)).slice(-3);
+      req.row[0] = id;
+      sh.appendRow(req.row);
+      logged = req.row;
+      logWrite_(ss, req, logged);
+      return json_({ ok: true, id: id });
+    } else if (req.op === "upsert") {
+      if (req.expect) {
+        if (at <= 0) return json_({ error: "conflict" });
+        const cur = all[at];
+        const bad = Object.keys(req.expect).some(function (k) { return String(cur[Number(k)] === undefined ? "" : cur[Number(k)]) !== String(req.expect[k]); });
+        if (bad) return json_({ error: "conflict" });
+      }
       if (at > 0) sh.getRange(at + 1, 1, 1, req.row.length).setValues([req.row]);
       else sh.appendRow(req.row);
     } else if (req.op === "delete") {
@@ -60,12 +95,19 @@ function doPost(e) {
     } else {
       return json_({ error: "bad-op" });
     }
-    if (req.tab !== "Sessions") {
-      ss.getSheetByName("Log").appendRow([new Date().toISOString(), req.op, req.tab, JSON.stringify(req.row || req.id)]);
-    }
+    logWrite_(ss, req, logged);
     return json_({ ok: true });
   } finally {
     lock.releaseLock();
+  }
+}
+
+function logWrite_(ss, req, data) {
+  if (req.tab === "Sessions") return;
+  try {
+    ss.getSheetByName("Log").appendRow([new Date().toISOString(), req.op, req.tab, JSON.stringify(data)]);
+  } catch (err) {
+    // A failed log entry must not fail the write.
   }
 }
 

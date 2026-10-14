@@ -2,7 +2,7 @@
 import { Bot, InlineKeyboard, Keyboard, type Context } from "grammy";
 import { revalidateTag } from "next/cache";
 import { advance, startAdd, startJoin, type Input, type Step } from "@/lib/bookclub/flow";
-import { bookState, canRequest, cancel, findDuplicate, matchKey, nextId, pay, payouts, reminders, returnBook } from "@/lib/bookclub/rules";
+import { bookState, canRequest, cancel, findDuplicate, matchKey, pay, payouts, reminders, returnBook } from "@/lib/bookclub/rules";
 import * as store from "@/lib/bookclub/store";
 import type { Book, Borrow, Member } from "@/lib/bookclub/types";
 import { site } from "@/lib/site";
@@ -19,6 +19,8 @@ const cfg = () => ({
 const date = (iso: string) => new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: "Asia/Kolkata" });
 const who = (m?: Member) => (m ? `${m.name}, Flat ${m.flat}` : "someone");
 const shelfChanged = () => revalidateTag("shelf", "max");
+// Notifications to other people are best-effort: one blocked chat must not abort the rest of a handler.
+const tell = (p: Promise<unknown>) => p.catch((e) => console.error("[bookclub] notify failed", e));
 
 const HELP = [
   "📚 Story Lab Book Club",
@@ -31,18 +33,25 @@ const HELP = [
 
 export function createBot(token: string) {
   const bot = new Bot(token);
-  const dm = bot.chatType("private");
-  const team = bot.filter((ctx) => String(ctx.chat?.id) === cfg().team);
+  // Errors must never escape handleUpdate (a 500 makes Telegram redeliver the update).
+  const safe = bot.errorBoundary(async (err) => {
+    console.error("[bookclub]", err.error);
+    try {
+      await err.ctx.reply("Something went wrong — please try again in a minute.");
+    } catch {}
+  });
+  const dm = safe.chatType("private");
+  const team = safe.filter((ctx) => String(ctx.chat?.id) === cfg().team);
 
   // In any group: tells the team the chat id to put in TELEGRAM_TEAM_CHAT_ID.
-  bot.chatType(["group", "supergroup"]).command("chatid", (ctx) => ctx.reply(`Chat ID: ${ctx.chat.id}`));
+  safe.chatType(["group", "supergroup"]).command("chatid", (ctx) => ctx.reply(`Chat ID: ${ctx.chat.id}`));
 
   // ---------- conversations ----------
 
-  async function show(ctx: Context, step: Step) {
+  async function show(ctx: Context, step: Step, data?: Data) {
     if (step.session) await store.save("Sessions", step.session);
     else await store.remove("Sessions", String(ctx.from!.id));
-    if (step.done) return finish(ctx, step.done);
+    if (step.done) return finish(ctx, step.done, data);
     const a = step.ask;
     if (!a) return ctx.reply(step.error ?? HELP);
     const text = step.error ? `${step.error}\n\n${a.text}` : a.text;
@@ -69,36 +78,39 @@ export function createBot(token: string) {
         return ctx.reply(`We already have “${dup.title}” listed — thank you! Do you have another novel to share? Send /add.`);
       }
     }
-    return show(ctx, next);
+    return show(ctx, next, data);
   }
 
-  async function finish(ctx: Context, done: NonNullable<Step["done"]>) {
+  async function finish(ctx: Context, done: NonNullable<Step["done"]>, known?: Data) {
     const id = String(ctx.from!.id);
     const d = done.draft;
     if (done.flow === "join") {
       const m: Member = { telegramId: id, name: d.name, flat: d.flat, phone: d.phone, childName: d.childName, status: "pending", joinedAt: new Date().toISOString() };
       await store.save("Members", m);
       await ctx.reply("Thanks! Story Lab will approve you shortly — we'll message you here. 🙂", { reply_markup: { remove_keyboard: true } });
-      return ctx.api.sendMessage(cfg().team, `🙋 New member: ${who(m)}${m.childName ? ` (child: ${m.childName})` : ""} · ${m.phone}`, {
+      await tell(ctx.api.sendMessage(cfg().team, `🙋 New member: ${who(m)}${m.childName ? ` (child: ${m.childName})` : ""} · ${m.phone}`, {
         reply_markup: new InlineKeyboard().text("✅ Approve", `t:ma:${id}`).text("❌ Decline", `t:md:${id}`),
-      });
+      }));
+      return;
     }
-    const data = await store.readAll();
+    const data = known ?? (await store.readAll());
     const key = matchKey(d.title, d.author);
     const dup = findDuplicate(data.books, key);
     if (dup) return ctx.reply(`We already have “${dup.title}” listed — thank you! Do you have another novel? Send /add.`);
     const b: Book = {
-      id: nextId("B", data.books.map((x) => x.id)), title: d.title, author: d.author, matchKey: key, condition: d.condition,
+      id: "", title: d.title, author: d.author, matchKey: key, condition: d.condition,
       photoFileId: d.photoFileId, ownerId: id, status: "pending", addedAt: new Date().toISOString(),
     };
-    await store.save("Books", b);
+    const newId = await store.insert("Books", b, "B");
+    if (!newId) return ctx.reply(`We already have “${b.title}” listed — thank you! Do you have another novel? Send /add.`);
+    b.id = newId;
     await ctx.reply(`Thanks! We'll check “${b.title}” and let you know when it's on the shelf.`);
     const owner = data.members.find((m) => m.telegramId === id);
     const caption = `📖 New book ${b.id}: “${b.title}” by ${b.author} (${b.condition}) from ${who(owner)}`;
     const kb = new InlineKeyboard().text("✅ Approve", `t:ba:${b.id}`).text("🚫 Not 10+", `t:br:${b.id}`);
-    return b.photoFileId
+    return tell(b.photoFileId
       ? ctx.api.sendPhoto(cfg().team, b.photoFileId, { caption, reply_markup: kb })
-      : ctx.api.sendMessage(cfg().team, caption, { reply_markup: kb });
+      : ctx.api.sendMessage(cfg().team, caption, { reply_markup: kb }));
   }
 
   // ---------- parents ----------
@@ -205,10 +217,10 @@ export function createBot(token: string) {
     if (!req) return ctx.reply(HELP);
     const me = data.members.find((m) => m.telegramId === id);
     const book = data.books.find((b) => b.id === req.bookId);
-    await ctx.api.sendPhoto(cfg().team, fileId, {
+    await tell(ctx.api.sendPhoto(cfg().team, fileId, {
       caption: `💳 Payment screenshot from ${who(me)} for “${book?.title}” (${req.id}) · ₹${price}`,
       reply_markup: new InlineKeyboard().text("💰 Paid", `t:lp:${req.id}`).text("✖ Cancel", `t:lc:${req.id}`),
-    });
+    }));
     return ctx.reply("Thanks! We'll confirm and arrange the handover.");
   });
 
@@ -240,16 +252,18 @@ export function createBot(token: string) {
     if (!check.ok) return ctx.reply(check.reason === "book-taken" ? "Someone just asked for that one — try another from /shelf." : "You already have a book out or requested — one at a time.");
     const book = ok.data.books.find((b) => b.id === bookId)!;
     const l: Borrow = {
-      id: nextId("L", ok.data.borrows.map((x) => x.id)), bookId, borrowerId: ok.me.telegramId, requestedAt: new Date().toISOString(),
+      id: "", bookId, borrowerId: ok.me.telegramId, requestedAt: new Date().toISOString(),
       paidAt: "", dueAt: "", returnedAt: "", ownerPaidAt: "", state: "requested",
     };
-    await store.save("Borrows", l);
+    const loanId = await store.insert("Borrows", l, "L");
+    if (!loanId) return ctx.reply("Someone just asked for that one — try another from /shelf.");
+    l.id = loanId;
     shelfChanged();
-    await ctx.editMessageReplyMarkup();
+    await tell(ctx.editMessageReplyMarkup());
     await ctx.reply(`Great choice! Please pay ₹${price} by UPI to ${cfg().upi} (note: ${l.id}), then send the payment screenshot here.`);
-    return ctx.api.sendMessage(cfg().team, `📥 Borrow request ${l.id}: “${book.title}” for ${who(ok.me)} — waiting for payment.`, {
+    return tell(ctx.api.sendMessage(cfg().team, `📥 Borrow request ${l.id}: “${book.title}” for ${who(ok.me)} — waiting for payment.`, {
       reply_markup: new InlineKeyboard().text("💰 Paid", `t:lp:${l.id}`).text("✖ Cancel", `t:lc:${l.id}`),
-    });
+    }));
   });
 
   // ---------- team ----------
@@ -259,10 +273,12 @@ export function createBot(token: string) {
     const m = data.members.find((x) => x.telegramId === ctx.match[2]);
     if (!m || m.status !== "pending") return ctx.answerCallbackQuery("Already handled");
     const approved = ctx.match[1] === "ma";
-    await store.save("Members", { ...m, status: approved ? "approved" : "declined" });
+    if (!(await store.saveIf("Members", { ...m, status: approved ? "approved" : "declined" }, { status: "pending" }))) {
+      return ctx.answerCallbackQuery("Already handled");
+    }
     await ctx.answerCallbackQuery(approved ? "Approved" : "Declined");
-    await ctx.editMessageText(`${ctx.callbackQuery.message?.text ?? ""}\n→ ${approved ? "✅ approved" : "❌ declined"}`);
-    return ctx.api.sendMessage(m.telegramId, approved ? `You're in! 🎉\n\n${HELP}` : "Sorry — we can't add you to the Book Club right now.");
+    await tell(ctx.editMessageText(`${ctx.callbackQuery.message?.text ?? ""}\n→ ${approved ? "✅ approved" : "❌ declined"}`));
+    return tell(ctx.api.sendMessage(m.telegramId, approved ? `You're in! 🎉\n\n${HELP}` : "Sorry — we can't add you to the Book Club right now."));
   });
 
   team.callbackQuery(/^t:(ba|br):(B\d+)$/, async (ctx) => {
@@ -270,17 +286,19 @@ export function createBot(token: string) {
     const b = data.books.find((x) => x.id === ctx.match[2]);
     if (!b || b.status !== "pending") return ctx.answerCallbackQuery("Already handled");
     const listed = ctx.match[1] === "ba";
-    await store.save("Books", { ...b, status: listed ? "listed" : "rejected" });
+    if (!(await store.saveIf("Books", { ...b, status: listed ? "listed" : "rejected" }, { status: "pending" }))) {
+      return ctx.answerCallbackQuery("Already handled");
+    }
     await ctx.answerCallbackQuery(listed ? "Listed" : "Marked not 10+");
-    await ctx.editMessageReplyMarkup();
-    await ctx.api.sendMessage(b.ownerId, listed ? `“${b.title}” is on the shelf! You'll earn ₹${ownerShare} every time it's borrowed.` : `Thanks for “${b.title}” — it isn't quite right for 10+ readers, so we won't list it. Do you have another?`);
+    if (listed) shelfChanged();
+    await tell(ctx.editMessageReplyMarkup());
+    await tell(ctx.api.sendMessage(b.ownerId, listed ? `“${b.title}” is on the shelf! You'll earn ₹${ownerShare} every time it's borrowed.` : `Thanks for “${b.title}” — it isn't quite right for 10+ readers, so we won't list it. Do you have another?`));
     if (!listed) return;
-    shelfChanged();
     const text = `📚 New on the shelf: “${b.title}” by ${b.author} · ₹${price}/week`;
     const kb = new InlineKeyboard().url("Borrow", `https://t.me/${ctx.me.username}?start=borrow_${b.id}`);
-    return b.photoFileId
+    return tell(b.photoFileId
       ? ctx.api.sendPhoto(cfg().channel, b.photoFileId, { caption: text, reply_markup: kb })
-      : ctx.api.sendMessage(cfg().channel, text, { reply_markup: kb });
+      : ctx.api.sendMessage(cfg().channel, text, { reply_markup: kb }));
   });
 
   team.callbackQuery(/^t:(lp|lc|lr):(L\d+)$/, async (ctx) => {
@@ -295,19 +313,21 @@ export function createBot(token: string) {
     } catch {
       return ctx.answerCallbackQuery("Already handled");
     }
-    await store.save("Borrows", next);
+    if (!(await store.saveIf("Borrows", next, { state: action === "lr" ? "out" : "requested" }))) {
+      return ctx.answerCallbackQuery("Already handled");
+    }
     shelfChanged();
     await ctx.answerCallbackQuery("Done");
     if (action === "lp") {
-      await ctx.editMessageReplyMarkup({ reply_markup: new InlineKeyboard().text("📥 Returned", `t:lr:${l.id}`) });
-      await ctx.api.sendMessage(l.borrowerId, `Paid ✓ — we'll hand over “${book?.title}”. Please return it by ${date(next.dueAt)}.`);
-      if (book) await ctx.api.sendMessage(book.ownerId, `“${book.title}” was just borrowed — +₹${ownerShare} for you! 🎉`);
+      await tell(ctx.editMessageReplyMarkup({ reply_markup: new InlineKeyboard().text("📥 Returned", `t:lr:${l.id}`) }));
+      await tell(ctx.api.sendMessage(l.borrowerId, `Paid ✓ — we'll hand over “${book?.title}”. Please return it by ${date(next.dueAt)}.`));
+      if (book) await tell(ctx.api.sendMessage(book.ownerId, `“${book.title}” was just borrowed — +₹${ownerShare} for you! 🎉`));
       return;
     }
-    await ctx.editMessageReplyMarkup();
-    if (action === "lc") return ctx.api.sendMessage(l.borrowerId, `Your request for “${book?.title}” was cancelled. Browse /shelf for another.`);
-    await ctx.api.sendMessage(l.borrowerId, `Thanks for returning “${book?.title}”! Pick your next one with /shelf.`);
-    if (book) return ctx.api.sendMessage(cfg().channel, `🔁 Back on the shelf: “${book.title}” by ${book.author}`);
+    await tell(ctx.editMessageReplyMarkup());
+    if (action === "lc") return tell(ctx.api.sendMessage(l.borrowerId, `Your request for “${book?.title}” was cancelled. Browse /shelf for another.`));
+    await tell(ctx.api.sendMessage(l.borrowerId, `Thanks for returning “${book?.title}”! Pick your next one with /shelf.`));
+    if (book) return tell(ctx.api.sendMessage(cfg().channel, `🔁 Back on the shelf: “${book.title}” by ${book.author}`));
   });
 
   team.command("payouts", async (ctx) => {
@@ -328,10 +348,14 @@ export function createBot(token: string) {
     const unpaid = data.borrows.filter((l) => ownerBooks.has(l.bookId) && l.paidAt && !l.ownerPaidAt);
     if (!unpaid.length) return ctx.answerCallbackQuery("Already paid");
     const at = new Date().toISOString();
-    for (const l of unpaid) await store.save("Borrows", { ...l, ownerPaidAt: at });
+    let marked = 0;
+    for (const l of unpaid) {
+      if (await store.saveIf("Borrows", { ...l, ownerPaidAt: at }, { ownerPaidAt: "" })) marked++;
+    }
+    if (!marked) return ctx.answerCallbackQuery("Already paid");
     await ctx.answerCallbackQuery("Marked paid");
-    await ctx.editMessageReplyMarkup();
-    return ctx.api.sendMessage(ctx.match[1], `We've sent you ₹${unpaid.length * ownerShare} for your books. Thank you for sharing! 📚`);
+    await tell(ctx.editMessageReplyMarkup());
+    return tell(ctx.api.sendMessage(ctx.match[1], `We've sent you ₹${marked * ownerShare} for your books. Thank you for sharing! 📚`));
   });
 
   team.command("overdue", async (ctx) => {
@@ -342,16 +366,16 @@ export function createBot(token: string) {
   });
 
   // Any team button pressed outside the team chat.
-  bot.callbackQuery(/^t:/, (ctx) => ctx.answerCallbackQuery("Only the Story Lab team can do that."));
-
-  bot.catch(async (err) => {
-    console.error("[bookclub]", err.error);
-    try {
-      await err.ctx.reply("Something went wrong — please try again in a minute.");
-    } catch {}
-  });
+  safe.callbackQuery(/^t:/, (ctx) => ctx.answerCallbackQuery("Only the Story Lab team can do that."));
 
   return bot;
+}
+
+let cached: { token: string; bot: Bot } | undefined;
+/** One bot per server instance, so grammY's getMe call isn't repeated on every update. */
+export function getBot(token: string) {
+  if (!cached || cached.token !== token) cached = { token, bot: createBot(token) };
+  return cached.bot;
 }
 
 // Sent by the daily cron.
