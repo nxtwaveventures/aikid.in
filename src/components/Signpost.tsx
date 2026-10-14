@@ -162,8 +162,8 @@ export default function Signpost({
         <div className="relative mx-auto mt-14 flex max-w-[440px] flex-col items-center gap-10">
           {/* the post */}
           <div aria-hidden className="absolute -bottom-40 top-[-28px] left-1/2 w-6 -translate-x-1/2 rounded-t-full bg-[#1c1028]" />
-          <Sign dir="plank" title="Birthday Story Parties" sub={partyPrice === "Free quote" ? "Free quote · we come to you" : `${partyPrice} · we come to you`} href="#parties" rotate="1deg" delay="150ms" tag={partyTag} />
-          <Sign dir="right" title="Story Lab Online" sub={`5 live sessions · ${onlinePrice}`} href="#online" rotate="6deg" delay="300ms" tag={onlineTag} />
+          <Sign dir="plank" title="Birthday Story Parties" sub={partyPrice === "Free quote" ? "Free quote · we come to you" : `${partyPrice} · we come to you`} href="/parties" rotate="1deg" delay="150ms" tag={partyTag} />
+          <Sign dir="right" title="Story Lab Online" sub={`5 live sessions · ${onlinePrice}`} href="/online" rotate="6deg" delay="300ms" tag={onlineTag} />
           <Sign dir="left" title="Storyteller? Join us" sub="We're hiring storytellers" href={hiringUrl} external rotate="-7deg" delay="450ms" tag="Hiring!" />
         </div>
       </div>
