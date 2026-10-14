@@ -24,9 +24,24 @@ export const onlineSessions = [
   ["Story Day", "Your child tells their finished story to the group. Recording shared with you."],
 ];
 
+export const bookClubSteps = [
+  ["Share a novel", "Add a book your child has finished. We check it's right for readers aged 10+."],
+  ["Kids borrow it", `₹${site.bookClub.price} for one week, paid before pickup.`],
+  ["You earn", `₹${site.bookClub.ownerShare} every time your book is borrowed.`],
+  ["Return in a week", "Bring it back and pick the next one."],
+];
+
+export const bookClubRules = [
+  "Novels for readers aged 10 and up, checked by Story Lab",
+  "One copy of each title on the shelf",
+  "Families are approved by Story Lab before joining",
+  "One book at a time per family",
+];
+
 export const ageBands = [
   ["3–5 years · Story Explorers", "Call-and-response stories, animal voices and act-it-out moments."],
   ["6–10 years · Story Makers", "Plot twists, characters and kids inventing their own stories."],
+  ["10+ years · Book Club", "Novels shared between families, borrowed a week at a time."],
 ];
 
 export const faqs: [string, string][] = [
@@ -45,5 +60,13 @@ export const faqs: [string, string][] = [
   [
     "How do online sessions work?",
     `Small live groups on video, ${site.online.perSession} each. You pick a weekly slot after buying; your child keeps the same group and storyteller for all ${site.online.sessions} sessions.`,
+  ],
+  [
+    "How does the Book Club work?",
+    `Families share novels their kids have finished. Other kids borrow them for ₹${site.bookClub.price} a week, and the owner earns ₹${site.bookClub.ownerShare} every time. It's starting in ${site.bookClub.societies.join(", ")}.`,
+  ],
+  [
+    "What if a book comes back late or damaged?",
+    "Tell us and we'll sort it out fairly with both families. Keep the book for one week; if you need longer, borrow it again.",
   ],
 ];

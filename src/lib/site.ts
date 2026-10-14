@@ -39,6 +39,16 @@ export const site = {
     seatsTotal: 6,
     seatsLeft: 6, // update as parents book; 0 shows "Batch full — join the waitlist"
   },
+  bookClub: {
+    price: 40, // per one-week borrow, paid before pickup
+    ownerShare: 20, // the book's owner earns this every time it's borrowed
+    loanDays: 7,
+    ages: "10+ years",
+    societies: ["Sumadhura Madhuram"],
+    // Set to the bot's username (without @) once the Telegram bot is live;
+    // until then the page's button opens an Instagram message to Story Lab.
+    telegramBot: "",
+  },
 };
 
 // Founders. To add a photo, put it in /public/founders/ and set `photo: "/founders/neha.jpg"`.

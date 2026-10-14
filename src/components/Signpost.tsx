@@ -97,6 +97,7 @@ export default function Signpost({
   onlineTag,
   onlinePrice,
   partyPrice,
+  bookClubSub,
 }: {
   partyHref: string;
   onlineHref: string;
@@ -104,6 +105,7 @@ export default function Signpost({
   onlineTag: string;
   onlinePrice: string;
   partyPrice: string;
+  bookClubSub: string;
 }) {
   return (
     <section className="relative flex min-h-[calc(100svh-6.5rem)] flex-col overflow-hidden bg-[#3f9469] pt-16 pb-36 sm:pt-20">
@@ -154,6 +156,7 @@ export default function Signpost({
           <div aria-hidden className="absolute -bottom-40 top-[-28px] left-1/2 w-6 -translate-x-1/2 rounded-t-full bg-[#1c1028]" />
           <Sign dir="plank" title="Birthday Story Parties" sub={`Ages 3–10 · ${partyPrice}`} href="/parties" rotate="1deg" tag={partyTag} />
           <Sign dir="right" title="Story Lab Online" sub={`Ages 3–10 · 5 sessions · ${onlinePrice}`} href="/online" rotate="3deg" tag={onlineTag} />
+          <Sign dir="left" title="Book Club" sub={bookClubSub} href="/book-club" rotate="-3deg" tag="New" />
         </div>
       </div>
 
