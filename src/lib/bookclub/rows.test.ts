@@ -22,6 +22,10 @@ describe("rows", () => {
     expect(fromRow<Session>("Sessions", row)).toEqual(s);
   });
 
+  it("reads a corrupt session draft as empty instead of throwing", () => {
+    expect(fromRow<Session>("Sessions", ["42", "add", "author", "{not json"]).draft).toEqual({});
+  });
+
   it("fills missing trailing cells with empty strings", () => {
     expect(fromRow<Book>("Books", ["B002", "Holes"]).status).toBe("");
   });

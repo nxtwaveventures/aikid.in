@@ -10,11 +10,20 @@ export const columns: Record<Tab, readonly string[]> = {
 
 const json = new Set(["draft"]);
 
+// A hand-edited cell must not take down every read of the sheet.
+function parseJson(cell: string) {
+  try {
+    return JSON.parse(cell);
+  } catch {
+    return {};
+  }
+}
+
 export function fromRow<T>(tab: Tab, row: string[]): T {
   const obj: Record<string, unknown> = {};
   columns[tab].forEach((key, i) => {
     const cell = row[i] ?? "";
-    obj[key] = json.has(key) ? (cell ? JSON.parse(cell) : {}) : cell;
+    obj[key] = json.has(key) ? parseJson(cell) : cell;
   });
   return obj as T;
 }

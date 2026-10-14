@@ -20,7 +20,14 @@ const date = (iso: string) => new Date(iso).toLocaleDateString("en-IN", { day: "
 const who = (m?: Member) => (m ? `${m.name}, Flat ${m.flat}` : "someone");
 const shelfChanged = () => revalidateTag("shelf", "max");
 // Notifications to other people are best-effort: one blocked chat must not abort the rest of a handler.
-const tell = (p: Promise<unknown>) => p.catch((e) => console.error("[bookclub] notify failed", e));
+const tell = (p: Promise<unknown>) =>
+  p.then(
+    () => true,
+    (e) => {
+      console.error("[bookclub] notify failed", e);
+      return false;
+    },
+  );
 
 const HELP = [
   "📚 Story Lab Book Club",
@@ -49,9 +56,13 @@ export function createBot(token: string) {
   // ---------- conversations ----------
 
   async function show(ctx: Context, step: Step, data?: Data) {
+    // Finish before ending the session, so a failed save leaves the parent something to retry.
+    if (step.done) {
+      await finish(ctx, step.done, data);
+      return store.remove("Sessions", String(ctx.from!.id));
+    }
     if (step.session) await store.save("Sessions", step.session);
     else await store.remove("Sessions", String(ctx.from!.id));
-    if (step.done) return finish(ctx, step.done, data);
     const a = step.ask;
     if (!a) return ctx.reply(step.error ?? HELP);
     const text = step.error ? `${step.error}\n\n${a.text}` : a.text;
@@ -337,16 +348,17 @@ export function createBot(token: string) {
     for (const p of owed) {
       const m = data.members.find((x) => x.telegramId === p.ownerId);
       await ctx.reply(`💸 ${who(m)} · ${m?.phone ?? ""} — owed ₹${p.owed}`, {
-        reply_markup: new InlineKeyboard().text(`Mark ₹${p.owed} paid`, `t:po:${p.ownerId}`),
+        reply_markup: new InlineKeyboard().text(`Mark ₹${p.owed} paid`, `t:po:${p.ownerId}:${p.owed}`),
       });
     }
   });
 
-  team.callbackQuery(/^t:po:(\d+)$/, async (ctx) => {
+  team.callbackQuery(/^t:po:(\d+):(\d+)$/, async (ctx) => {
     const data = await store.readAll();
     const ownerBooks = new Set(data.books.filter((b) => b.ownerId === ctx.match[1]).map((b) => b.id));
     const unpaid = data.borrows.filter((l) => ownerBooks.has(l.bookId) && l.paidAt && !l.ownerPaidAt);
     if (!unpaid.length) return ctx.answerCallbackQuery("Already paid");
+    if (unpaid.length * ownerShare !== Number(ctx.match[2])) return ctx.answerCallbackQuery("Amount changed — run /payouts again");
     const at = new Date().toISOString();
     let marked = 0;
     for (const l of unpaid) {
@@ -383,10 +395,14 @@ export async function sendReminders(bot: Bot) {
   const data = await store.readAll();
   const { dueSoon, overdue } = reminders(data.borrows, new Date());
   const title = (l: Borrow) => data.books.find((b) => b.id === l.bookId)?.title ?? l.bookId;
-  for (const l of dueSoon) await bot.api.sendMessage(l.borrowerId, `⏰ “${title(l)}” is due back by ${date(l.dueAt)}.`);
-  for (const l of overdue) await bot.api.sendMessage(l.borrowerId, `📚 “${title(l)}” was due on ${date(l.dueAt)} — please return it soon.`);
+  const messages: [string, string][] = [
+    ...dueSoon.map((l): [string, string] => [l.borrowerId, `⏰ “${title(l)}” is due back by ${date(l.dueAt)}.`]),
+    ...overdue.map((l): [string, string] => [l.borrowerId, `📚 “${title(l)}” was due on ${date(l.dueAt)} — please return it soon.`]),
+  ];
   if (overdue.length) {
-    await bot.api.sendMessage(cfg().team, `Overdue today:\n${overdue.map((l) => `• ${title(l)} — ${who(data.members.find((m) => m.telegramId === l.borrowerId))}`).join("\n")}`);
+    messages.push([cfg().team, `Overdue today:\n${overdue.map((l) => `• ${title(l)} — ${who(data.members.find((m) => m.telegramId === l.borrowerId))}`).join("\n")}`]);
   }
-  return { dueSoon: dueSoon.length, overdue: overdue.length };
+  let failed = 0;
+  for (const [chat, text] of messages) if (!(await tell(bot.api.sendMessage(chat, text)))) failed++;
+  return { dueSoon: dueSoon.length, overdue: overdue.length, failed };
 }
