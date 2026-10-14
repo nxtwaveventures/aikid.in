@@ -14,7 +14,7 @@
    - UPI_ID — the UPI ID borrowers pay to
    - BOOKCLUB_SCRIPT_URL, BOOKCLUB_SCRIPT_SECRET — from step 3
    - CRON_SECRET — any long random text
-5. **Deploy**, then run: `vercel env pull .env.local --environment=production` and `node --env-file=.env.local scripts/telegram-setup.mjs https://www.aikid.in`
+5. **Deploy** (push to GitHub or redeploy in Vercel). Every production deploy connects the bot to Telegram automatically — look for "Telegram setWebhook ✓" in the build log.
 6. In the team group send `/chatid` → put the number in TELEGRAM_TEAM_CHAT_ID → redeploy.
 7. **Test** with your own phone: /start → join → approve in team group → /add a book → approve → it appears in the channel and on aikid.in/book-club → borrow it → send any photo as "payment" → 💰 Paid → 📥 Returned.
 8. Tell Claude it works → `telegramBot: "storylabclub_bot"` goes into `src/lib/site.ts` and the website switches to "Join on Telegram".
