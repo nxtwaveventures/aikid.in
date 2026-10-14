@@ -2,7 +2,8 @@
 // Runs automatically after every production build on Vercel (npm "postbuild"),
 // or by hand:  node --env-file=.env.local bin/telegram-setup.mjs https://www.aikid.in
 const onVercelProduction = process.env.VERCEL_ENV === "production";
-const site = (process.argv[2] ?? (onVercelProduction ? process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.aikid.in" : ""))
+// Telegram does not follow redirects, so this must be the exact canonical host (aikid.in redirects to www).
+const site = (process.argv[2] ?? (onVercelProduction ? "https://www.aikid.in" : ""))
   .replace(/\/+$/, "");
 const token = process.env.TELEGRAM_BOT_TOKEN;
 const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
