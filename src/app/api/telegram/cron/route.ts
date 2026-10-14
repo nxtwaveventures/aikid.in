@@ -2,7 +2,8 @@ import { getBot, sendReminders } from "@/lib/bookclub/bot";
 
 // Vercel Cron, 9:00 IST daily (see vercel.json).
 export async function GET(req: Request) {
-  if (req.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`) {
+  const secret = process.env.CRON_SECRET;
+  if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) {
     return new Response("Unauthorized", { status: 401 });
   }
   const token = process.env.TELEGRAM_BOT_TOKEN;
