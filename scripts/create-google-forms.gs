@@ -103,7 +103,7 @@ function buildPartyForm_() {
   form.addPageBreakItem().setTitle("The party");
   form.addDateItem().setTitle("Party date").setRequired(true);
   form.addTimeItem().setTitle("Preferred start time").setRequired(true);
-  text_(form, "Venue / area", true, "e.g. Home, society clubhouse, party venue — with area");
+  text_(form, "Venue / area", true, "Party venue name and area, e.g. a party hall, clubhouse or café (we don't do shows at homes)");
   text_(form, "City", true);
   choice_(form, "How many kids are expected?", ["Up to 10", "11–20", "21–30", "More than 30"], true);
   checks_(form, "Guests' age groups", AGE_OPTIONS, true);
