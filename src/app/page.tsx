@@ -17,7 +17,7 @@ export default function Home() {
           href="/parties"
           tint="bg-peach"
           title="Birthday Story Parties"
-          body="A live story show starring the birthday child — at your home or venue."
+          body="A live story show starring the birthday child — at your party venue."
           meta={partyPriceLabel}
         />
         <Card

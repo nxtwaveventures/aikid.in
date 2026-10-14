@@ -8,7 +8,7 @@ export const partySteps = [
 ];
 
 export const partyIncludes = [
-  "A trained storyteller, live at your venue",
+  "A trained storyteller, live at your party venue",
   "An original story starring the birthday child",
   "Props, puppets and sound effects kids get to handle",
   "An act-it-out segment where every child gets a role",
@@ -39,8 +39,8 @@ export const faqs: [string, string][] = [
     "Hindi and English — or a natural mix of both, the way most families speak at home. Tell us your preference when you book.",
   ],
   [
-    "Do you travel to our venue?",
-    `Yes — homes, clubhouses, cafés and party venues across ${site.city}. Travel outside city limits is quoted separately.`,
+    "Where do you do parties?",
+    `At party venues across ${site.city} — party halls, clubhouses and cafés. We don't do shows at homes. Travel outside city limits is quoted separately.`,
   ],
   [
     "How do online sessions work?",
