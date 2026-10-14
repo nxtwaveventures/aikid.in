@@ -75,7 +75,7 @@ function doPost(e) {
       rows.forEach(function (r) {
         if (String(r[0]).indexOf(req.prefix) === 0) max = Math.max(max, parseInt(String(r[0]).slice(req.prefix.length), 10) || 0);
       });
-      const id = req.prefix + ("000" + (max + 1)).slice(-3);
+      const id = req.prefix + String(max + 1).padStart(3, "0");
       req.row[0] = id;
       sh.appendRow(req.row);
       logged = req.row;

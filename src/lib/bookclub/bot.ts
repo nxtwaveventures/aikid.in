@@ -313,7 +313,7 @@ export function createBot(token: string) {
     } catch {
       return ctx.answerCallbackQuery("Already handled");
     }
-    if (!(await store.saveIf("Borrows", next, { state: action === "lr" ? "out" : "requested" }))) {
+    if (!(await store.saveIf("Borrows", next, { state: action === "lr" ? "out" : "requested", ownerPaidAt: l.ownerPaidAt }))) {
       return ctx.answerCallbackQuery("Already handled");
     }
     shelfChanged();
@@ -350,7 +350,7 @@ export function createBot(token: string) {
     const at = new Date().toISOString();
     let marked = 0;
     for (const l of unpaid) {
-      if (await store.saveIf("Borrows", { ...l, ownerPaidAt: at }, { ownerPaidAt: "" })) marked++;
+      if (await store.saveIf("Borrows", { ...l, ownerPaidAt: at }, { ownerPaidAt: "", state: l.state })) marked++;
     }
     if (!marked) return ctx.answerCallbackQuery("Already paid");
     await ctx.answerCallbackQuery("Marked paid");
