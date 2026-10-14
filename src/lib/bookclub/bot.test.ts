@@ -15,6 +15,7 @@ type Options = { sheet?: Sheet; respond?: (body: Body) => Body | undefined; bloc
 
 const parentRow = [String(PARENT), "Riya", "1204", "+919800000000", "", "approved", ""];
 const listedBook = ["B001", "Wonder", "R.J. Palacio", "wonder|rj palacio", "Good", "", OWNER, "listed", ""];
+const pendingBook = ["B001", "Wonder", "R.J. Palacio", "wonder|rj palacio", "Good", "", OWNER, "pending", ""];
 const borrowRow = (over: Partial<Record<"id" | "borrowerId" | "paidAt" | "ownerPaidAt" | "state", string>> = {}) => {
   const b = { id: "L001", borrowerId: String(PARENT), paidAt: "2026-01-01", ownerPaidAt: "", state: "out", ...over };
   return [b.id, "B001", b.borrowerId, "", b.paidAt, "2026-01-08", "", b.ownerPaidAt, b.state];
@@ -107,6 +108,40 @@ describe("team borrow writes", () => {
     const { bot, writes } = setup({ sheet: { Books: [listedBook], Borrows: [borrowRow()] } });
     await bot.handleUpdate(press("t:lr:L001", TEAM));
     expect(writes.find((w) => w.op === "upsert")?.expect).toEqual({ "8": "out", "7": "" });
+  });
+});
+
+describe("review focus", () => {
+  it("refuses a team button pressed outside the team chat, without writing", async () => {
+    const { bot, writes, answer } = setup({ sheet: { Books: [pendingBook] } });
+    await bot.handleUpdate(press("t:ba:B001", -300));
+    expect(answer()).toBe("Only the Story Lab team can do that.");
+    expect(writes).toEqual([]);
+  });
+
+  it("says Already handled when a team transition loses the race, and tells nobody", async () => {
+    const { bot, answer, sentTo } = setup({ sheet: { Books: [pendingBook] }, respond: (b) => (b.op === "upsert" ? { error: "conflict" } : undefined) });
+    await bot.handleUpdate(press("t:ba:B001", TEAM));
+    expect(answer()).toBe("Already handled");
+    expect(sentTo("-200")).toEqual([]);
+    expect(sentTo(OWNER)).toEqual([]);
+  });
+
+  it("tells the second borrower someone just asked when the insert conflicts", async () => {
+    const { bot, texts } = setup({
+      sheet: { Members: [parentRow], Books: [listedBook] },
+      respond: (b) => (b.op === "insert" ? { error: "conflict" } : undefined),
+    });
+    await bot.handleUpdate(press("bc:B001", PARENT));
+    expect(texts()).toEqual(["Someone just asked for that one — try another from /shelf."]);
+  });
+
+  it("answers stray text with help and writes nothing", async () => {
+    const { bot, writes, texts } = setup({ sheet: { Members: [parentRow] } });
+    await bot.handleUpdate(message("hello"));
+    expect(texts()).toHaveLength(1);
+    expect(texts()[0]).toContain("/shelf — browse and borrow");
+    expect(writes).toEqual([]);
   });
 });
 
