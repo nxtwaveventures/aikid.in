@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Shelf from "@/components/Shelf";
 import { Bullets, Button, Facts, Page, Section, Steps } from "@/components/ui";
 import { bookClubRules, bookClubSteps } from "@/lib/content";
+import { getShelf } from "@/lib/bookclub/shelf";
 import { site } from "@/lib/site";
 
 const { bookClub } = site;
@@ -14,7 +16,8 @@ const join = bookClub.telegramBot
   ? { href: `https://t.me/${bookClub.telegramBot}`, label: "Join on Telegram" }
   : { href: `https://ig.me/m/${site.instagram}`, label: "Message us to join" };
 
-export default function BookClubPage() {
+export default async function BookClubPage() {
+  const books = bookClub.telegramBot ? await getShelf() : [];
   return (
     <Page
       title="Book Club 10+"
@@ -23,6 +26,16 @@ export default function BookClubPage() {
       <div className="mt-10">
         <Facts items={[["Borrow", `₹${bookClub.price} / week`], ["Owners earn", `₹${bookClub.ownerShare} each time`], ["Ages", bookClub.ages]]} />
       </div>
+
+      {bookClub.telegramBot && (
+        <Section id="shelf" title="On the shelf">
+          {books.length > 0 ? (
+            <Shelf books={books} bot={bookClub.telegramBot} />
+          ) : (
+            <p className="text-ink-soft">The shelf is being stocked — be the first to share a novel.</p>
+          )}
+        </Section>
+      )}
 
       <Section title="How it works">
         <Steps items={bookClubSteps} />
@@ -38,8 +51,9 @@ export default function BookClubPage() {
             ? "Join on Telegram to see the shelf, add your books and borrow."
             : "We're opening the shelf soon. Message us to join or to share your first novel — and tell us if you'd like the Book Club in your society."}
         </p>
-        <div className="mt-6">
+        <div className="mt-6 flex flex-wrap gap-3">
           <Button href={join.href}>{join.label}</Button>
+          {bookClub.telegramBot && <Button href={`https://t.me/${bookClub.telegramBot}?start=add`}>Add your book</Button>}
         </div>
       </Section>
     </Page>
