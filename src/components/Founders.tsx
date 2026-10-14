@@ -49,7 +49,7 @@ export default function Founders() {
 
         {/* story */}
         <div>
-          <SectionLabel n="02">Meet the founders</SectionLabel>
+          <SectionLabel n="01">Meet the founders</SectionLabel>
           <p className="reveal mt-5 inline-flex items-center gap-2 rounded-full bg-coral/10 px-4 py-2 text-sm font-extrabold text-coral">
             👩‍👩 Women-founded · run with love
           </p>

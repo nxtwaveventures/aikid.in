@@ -55,7 +55,7 @@ export default function Proof() {
 
         {/* Parent reviews */}
         <div className={visibleSessions.length > 0 ? "mt-36" : ""}>
-          <SectionLabel n="06" center>Parent feedback</SectionLabel>
+          <SectionLabel n="03" center>Parent feedback</SectionLabel>
           <h2 className="reveal mt-4 text-center font-display text-4xl font-semibold sm:text-6xl" style={d(100)}>
             What parents say
           </h2>
