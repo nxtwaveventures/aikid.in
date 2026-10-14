@@ -2,13 +2,29 @@ import type { Book, Borrow } from "@/lib/bookclub/types";
 
 const DAY = 24 * 60 * 60 * 1000;
 
+// Marks (\p{M}) are kept so Indic vowel signs are not turned into spaces.
 const norm = (s: string) =>
-  s.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, " ").replace(/\s+/g, " ").trim();
+  s.normalize("NFC").toLowerCase().replace(/[^\p{L}\p{M}\p{N}\s]/gu, " ").replace(/\s+/g, " ").trim();
+
+// Joins runs of single-letter tokens so "R. J." and "R.J." both become "rj".
+const joinInitials = (s: string) => {
+  const out: string[] = [];
+  let inInitials = false;
+  for (const tok of s.split(" ")) {
+    if (tok.length === 1 && inInitials) {
+      out[out.length - 1] += tok;
+    } else {
+      out.push(tok);
+      inInitials = tok.length === 1;
+    }
+  }
+  return out.join(" ");
+};
 
 // "The Hobbit" by "J.R.R. Tolkien" and "hobbit" by "JRR Tolkien" are the same book.
 export function matchKey(title: string, author: string): string {
   const t = norm(title).replace(/^(the|a|an) /, "");
-  const a = norm(author.replace(/\.(?=\S)/g, "").replace(/\./g, " "));
+  const a = joinInitials(norm(author.replace(/\.(?=\S)/g, "").replace(/\./g, " ")));
   return `${t}|${a}`;
 }
 

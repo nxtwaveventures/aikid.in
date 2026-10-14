@@ -17,7 +17,16 @@ const now = new Date("2026-10-14T03:30:00.000Z");
 describe("matchKey", () => {
   it("ignores case, punctuation, extra spaces and a leading article", () => {
     expect(matchKey("The Hobbit", "J.R.R. Tolkien")).toBe(matchKey("  hobbit ", "JRR  Tolkien"));
-    expect(matchKey("Wonder", "R. J. Palacio")).toBe("wonder|r j palacio");
+    expect(matchKey("Wonder", "R. J. Palacio")).toBe("wonder|rj palacio");
+  });
+  it("treats spaced and unspaced initials as the same author", () => {
+    expect(matchKey("Wonder", "R. J. Palacio")).toBe(matchKey("Wonder", "R.J. Palacio"));
+    expect(matchKey("Wonder", "R.J. Palacio")).toBe(matchKey("wonder", "RJ Palacio"));
+    expect(matchKey("The Hobbit", "J. R. R. Tolkien")).toBe(matchKey("Hobbit", "JRR Tolkien"));
+  });
+  it("keeps Indic vowel signs so different words do not collide", () => {
+    expect(matchKey("किताब", "प्रेमचंद")).not.toBe(matchKey("कोताब", "प्रेमचंद"));
+    expect(matchKey("कहानी", "x")).toMatch(/^कहानी\|/);
   });
   it("keeps different authors apart", () => {
     expect(matchKey("Matilda", "Roald Dahl")).not.toBe(matchKey("Matilda", "Someone Else"));
