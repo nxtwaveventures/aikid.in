@@ -33,3 +33,17 @@ body {
   color: var(--ink);
   font-family: var(--font-nunito), system-ui, sans-serif;
 }
+
+/* paper bunting on Home — a slow, gentle sway from the thread */
+@keyframes bunting-sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+.bunting-flag {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  animation: bunting-sway 4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bunting-flag { animation: none; }
+}
