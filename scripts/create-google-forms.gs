@@ -86,7 +86,7 @@ function short_(form) {
 function buildPartyForm_() {
   const form = newForm_(
     "Story Lab — Get a Birthday Party Quote",
-    "A live storyteller, props and an original story where the birthday child is the hero (60–75 minutes).\n\nTell us about your party and we'll WhatsApp you a free, no-obligation quote within a few hours. Weekends fill up fast!",
+    "A live storyteller, props and an original story where the birthday child is the hero (45 minutes).\n\nTell us about your party and we'll WhatsApp you a free, no-obligation quote within a few hours. Weekends fill up fast!",
     "Thank you! 🎂 We'll WhatsApp you your quote and date availability within a few hours."
   );
 

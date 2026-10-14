@@ -20,7 +20,7 @@ export const site = {
     // While false, parties show "Get a free quote" (via the Google Form) instead of a price.
     showPrice: false,
     price: 10000,
-    duration: "60–75 minutes",
+    duration: "45 minutes",
     kids: "up to 30 kids",
     ages: "3–10 years",
     // Availability shown across the site. Keep this TRUE and up to date —

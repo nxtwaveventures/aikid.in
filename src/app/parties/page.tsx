@@ -12,7 +12,7 @@ export default function PartiesPage() {
   return (
     <Page
       title="Birthday Story Parties"
-      lead="A live story show where every child joins in — they shout answers, become characters and help the hero win. Parents get to sit down for an hour."
+      lead="A live story show where every child joins in — they shout answers, become characters and help the hero win. Parents get to sit back and enjoy it."
     >
       <div className="mt-10">
         <Facts items={[["Show", site.party.duration], ["Group", site.party.kids], ["Ages", site.party.ages]]} />
