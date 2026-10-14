@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Fraunces, Lilita_One, Nunito } from "next/font/google";
 import "./globals.css";
+import Footer from "@/components/Footer";
+import MobileCTA from "@/components/MobileCTA";
+import Nav from "@/components/Nav";
+import ScrollReveal from "@/components/ScrollReveal";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -25,7 +29,7 @@ const description =
 export const metadata: Metadata = {
   // TODO: set NEXT_PUBLIC_SITE_URL to your real domain so link previews resolve
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
-  title: "Story Lab — Human touch in the world of AI",
+  title: { default: "Story Lab — Human touch in the world of AI", template: "%s · Story Lab" },
   description,
   openGraph: {
     title: "Come, visit Story Lab 🎂📖",
@@ -44,7 +48,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {/* lets CSS hide .reveal elements only when JS will reveal them */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        <ScrollReveal />
+        <Nav />
+        <main className="overflow-x-clip">{children}</main>
+        <Footer />
+        <MobileCTA />
+      </body>
     </html>
   );
 }
