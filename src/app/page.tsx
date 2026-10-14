@@ -9,10 +9,8 @@ export default function Home() {
     <>
       <LegacyHashRedirect />
       <Signpost
-        hiringUrl={site.forms.hiring}
         partyHref={site.forms.party}
         onlineHref={site.forms.online}
-        tagline={site.tagline}
         partyTag={site.party.slotsLeftThisMonth === 0 ? "Fully booked" : "Now booking"}
         onlineTag={site.online.seatsLeft > 0 ? "First batch" : "Waitlist"}
         onlinePrice={inr(site.online.price)}

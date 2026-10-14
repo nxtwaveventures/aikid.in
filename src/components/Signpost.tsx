@@ -16,8 +16,6 @@ function Sign({
   sub,
   href,
   rotate,
-  external,
-  delay,
   tag,
 }: {
   dir: Dir;
@@ -25,16 +23,12 @@ function Sign({
   sub: string;
   href: string;
   rotate: string;
-  external?: boolean;
-  delay: string;
   tag?: string;
 }) {
   return (
     <a
       href={href}
-      {...(external ? { target: "_blank", rel: "noopener" } : {})}
       className="group relative block w-full max-w-[420px] focus:outline-none"
-      style={{ ["--d" as string]: delay }}
     >
       <div
         className="origin-[50%_10%] transition-transform duration-500 ease-[cubic-bezier(.3,1.6,.5,1)] group-hover:rotate-0 group-hover:scale-105 group-focus-visible:scale-105"
@@ -97,19 +91,15 @@ function Bushes() {
 }
 
 export default function Signpost({
-  hiringUrl,
   partyHref,
   onlineHref,
-  tagline,
   partyTag,
   onlineTag,
   onlinePrice,
   partyPrice,
 }: {
-  hiringUrl: string;
   partyHref: string;
   onlineHref: string;
-  tagline: string;
   partyTag: string;
   onlineTag: string;
   onlinePrice: string;
@@ -139,11 +129,8 @@ export default function Signpost({
         <h1 className="text-center font-sign text-5xl text-white drop-shadow-[0_4px_0_rgba(0,0,0,0.12)] sm:text-7xl">
           Come, visit Story Lab
         </h1>
-        <p className="mx-auto mt-5 max-w-xl text-center text-lg font-semibold text-white/80" style={{ ["--d" as string]: "120ms" }}>
-          {tagline}. Storytelling for kids aged 3–10 — pick a path, every one ends in a story.
-        </p>
 
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row" style={{ ["--d" as string]: "200ms" }}>
+        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a
             href={partyHref}
             target="_blank"
@@ -165,9 +152,8 @@ export default function Signpost({
         <div className="relative mx-auto mt-14 flex max-w-[440px] flex-col items-center gap-10">
           {/* the post */}
           <div aria-hidden className="absolute -bottom-40 top-[-28px] left-1/2 w-6 -translate-x-1/2 rounded-t-full bg-[#1c1028]" />
-          <Sign dir="plank" title="Birthday Story Parties" sub={partyPrice === "Free quote" ? "Free quote · at your party venue" : `${partyPrice} · at your party venue`} href="/parties" rotate="1deg" delay="150ms" tag={partyTag} />
-          <Sign dir="right" title="Story Lab Online" sub={`5 live sessions · ${onlinePrice}`} href="/online" rotate="6deg" delay="300ms" tag={onlineTag} />
-          <Sign dir="left" title="Storyteller? Join us" sub="We're hiring storytellers" href={hiringUrl} external rotate="-7deg" delay="450ms" tag="Hiring!" />
+          <Sign dir="plank" title="Birthday Story Parties" sub={`Ages 3–10 · ${partyPrice}`} href="/parties" rotate="1deg" tag={partyTag} />
+          <Sign dir="right" title="Story Lab Online" sub={`Ages 3–10 · 5 sessions · ${onlinePrice}`} href="/online" rotate="3deg" tag={onlineTag} />
         </div>
       </div>
 
